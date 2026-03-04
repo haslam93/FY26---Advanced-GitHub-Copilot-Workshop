@@ -111,7 +111,7 @@ The `.github/` folder contains working examples of everything covered in this mo
 | [.github/prompts/generate-tests.prompt.md](../.github/prompts/generate-tests.prompt.md) | Prompt file | ✅ Available in picker |
 | [.vscode/settings.json](../.vscode/settings.json) | Workspace-scoped settings | ✅ Active now |
 
-> See [.github/README.md](../.github/README.md) for a quick overview of all live demo files.
+> See [.github/FILES.md](../.github/FILES.md) for a quick overview of all live demo files.
 
 ---
 

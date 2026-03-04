@@ -1,4 +1,4 @@
-# .github — Live Demo Files
+# .github — Copilot Instruction & Prompt Files
 
 > **These files are active on this repository right now.**
 >
