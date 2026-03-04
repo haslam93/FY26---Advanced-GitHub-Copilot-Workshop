@@ -96,7 +96,7 @@ mindmap
 | [07](07-databases/README.md) | **Databases** | mssql VS Code extension, natural-language → T-SQL with Copilot, real `OntarioPermits` schema (Regions, Applicants, Permits, StatusHistory), stored procedures, SQL security review | 35 min |
 | [08](08-models-context/README.md) | **Models & Context** | All Copilot-supported models (Anthropic, Google, OpenAI, xAI, GitHub), speed vs reasoning quadrant, premium request multipliers, context window management strategies | 25 min |
 | [09](09-copilot-on-github/README.md) | **Copilot on GitHub.com** | Copilot Coding Agent (issue → PR lifecycle), AI code review on pull requests, Copilot Spaces as knowledge hubs, `copilot-review-instructions.md` | 35 min |
-| [10](10-hands-on-lab/README.md) | **Hands-on Lab** | 5 self-contained exercises: Customization, Background Agent, GitHub Remote MCP, .NET Modernization, Test Generation — each 15 min, ~90 min total | 90 min |
+| [10](10-hands-on-lab/README.md) | **Hands-on Lab** | 5 self-contained exercises: Customization, Background Agent, GitHub Remote MCP, .NET Modernization, Test Generation — each 15 min, ~90 min total. **BONUS:** Permit Dashboard Streamlit app for GitHub Coding Agent demos | 90 min |
 
 **Total guided workshop time: ~6.5 hours** (excluding breaks)
 
@@ -124,7 +124,11 @@ cd ../06-qa-testing/playwright-samples && npm install && npx playwright install
 # 6. For Database module — connect to LocalDB with the mssql extension (Module 07)
 #    Run: 07-databases/samples/schema.sql then 07-databases/samples/seed-data.sql
 
-# 7. For CLI module — install the standalone Copilot CLI (Module 04)
+# 7. For Hands-on Lab bonus — try the Permit Dashboard Streamlit app (Module 10)
+#    cd 10-hands-on-lab/permit-dashboard && pip install -r requirements.txt
+#    streamlit run app.py
+
+# 8. For CLI module — install the standalone Copilot CLI (Module 04)
 #    See: https://docs.github.com/en/copilot/how-tos/set-up/install-copilot-cli
 copilot --version   # verify after installing
 ```
@@ -184,6 +188,13 @@ GitHubCopilot-AdvancedRepo/
 ├── 08-models-context/                 ← Model reference table, multipliers, context management
 ├── 09-copilot-on-github/              ← Coding Agent docs, code review setup, Spaces guide
 └── 10-hands-on-lab/                   ← 5 exercises + prerequisites checklist
+    ├── exercises/                     ← 5 self-contained exercise files
+    ├── docs/
+    └── permit-dashboard/              ← Streamlit demo app for GitHub Coding Agent practice
+        ├── app.py                     ← Full-featured dashboard with 5 pages
+        ├── requirements.txt
+        ├── README.md
+        └── screenshots/               ← Home, Analytics, Tracker, Trends, About
 ```
 
 > **The `.github/` folder is a live demo.** The instruction files and prompt files there are *actively applied* to this repo whenever you open it in VS Code with GitHub Copilot. They are the hands-on demonstration for [Module 01](01-customization/README.md).
@@ -234,6 +245,7 @@ Jump directly to any module. Each `README.md` opens with a clear "What you'll le
 | [`generate-presentation.js`](generate-presentation.js) | Node.js script that regenerates the PPTX from source. Run `node generate-presentation.js` after making changes. Requires `npm install pptxgenjs` in the repo root. |
 | [`.github/prompts/`](.github/prompts/) | 5 reusable prompt files — usable immediately in VS Code Chat (open via `@workspace /prompt`). |
 | [`10-hands-on-lab/exercises/`](10-hands-on-lab/exercises/) | 5 self-contained markdown exercise files for the lab session. |
+| [`10-hands-on-lab/permit-dashboard/`](10-hands-on-lab/permit-dashboard/) | **NEW:** Modern Streamlit demo app perfect for GitHub Coding Agent practice. 5-page dashboard with interactive analytics, permit tracker, and trends. Includes setup guide, 8+ enhancement prompts, and full screenshots. |
 
 ---
 
