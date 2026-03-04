@@ -1,6 +1,6 @@
 # Model Selection Guide
 
-> **Practical guide for Ontario government developers:** which model to reach for, when, and why.
+> **Practical guide for enterprise developers:** which model to reach for, when, and why.
 
 ---
 
@@ -85,7 +85,7 @@
 ### Gemini 3 Pro / 3.1 Pro — The Large Context Champion
 
 - **Best for:** Tasks where you must attach a very large file or multiple large files
-- **Context:** **1,000,000 tokens** — holds entire Ontario projects
+- **Context:** **1,000,000 tokens** — holds entire enterprise projects
 - **Cost:** **1×**
 
 ```text
@@ -104,8 +104,8 @@
 - **Cost:** **3× — use deliberately**
 
 ```text
-// When to justify 3× cost (Ontario examples)
-- "Review this microservices migration proposal for the Ontario Benefits platform
+// When to justify 3× cost (enterprise examples)
+- "Review this microservices migration proposal for the Benefits platform
    and identify security, scalability, and operational risks"
 - "Design a CQRS architecture for the permit submission workflow that handles
    100k submissions/day and satisfies MFIPPA data residency requirements"
@@ -123,7 +123,7 @@
 | **Copilot Business** | All 0× models | 300 premium req/month per seat | Claude Opus 4.6 |
 | **Copilot Enterprise** | All 0× models | Custom | Claude Opus 4.6 |
 
-> **Ontario Government context:** Most OPS developers will be on Copilot Business or Enterprise. The 300 premium request/month default can be increased by your GitHub admin.
+> **Enterprise context:** Most enterprise developers will be on Copilot Business or Enterprise. The 300 premium request/month default can be increased by your GitHub admin.
 
 ---
 

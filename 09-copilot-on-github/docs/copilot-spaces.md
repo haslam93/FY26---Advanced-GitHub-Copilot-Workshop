@@ -10,7 +10,7 @@ A Space is a **named, shared context container** that you build once and reuse a
 
 ```mermaid
 flowchart LR
-    subgraph "Space: Ontario Permits Platform"
+    subgraph "Space: Enterprise Permits Platform"
         A["📁 permitsapi repo\n(main branch)"]
         B["📋 Architecture Decision Records\n(GitHub Issues tagged ADR)"]
         C["📄 Security Policy docs\n(selected .md files)"]
@@ -54,7 +54,7 @@ With a Space:
 
 1. Go to **github.com** → top navigation → **Copilot** icon → **Spaces**
 2. Click **New Space**
-3. Give it a name (e.g., `Ontario Permits Platform`)
+3. Give it a name (e.g., `Enterprise Permits Platform`)
 4. Add knowledge sources (see below)
 5. Share with your team by adding collaborators
 
@@ -64,14 +64,14 @@ With a Space:
 
 | Source type | What it includes | Example |
 |---|---|---|
-| **GitHub Repository** | All files in the repo (or specific branches) | `ontario-gov/permitsapi` |
+| **GitHub Repository** | All files in the repo (or specific branches) | `enterprise/permitsapi` |
 | **GitHub Issues & PRs** | Selected labels, milestones, or all | Issues labelled `ADR` |
 | **Selected files** | Cherry-pick specific markdown, SQL, or code files | `docs/architecture/*.md` |
 | **Code search results** | Files matching a code search pattern | All `*.csproj` files |
 
 ---
 
-## Ontario Government Use Cases
+## Enterprise Use Cases
 
 ### Use Case 1 — Platform knowledge base
 
@@ -79,7 +79,7 @@ With a Space:
 Space: OPS Digital Services — Permits Platform
 
 Sources:
-- Repo: ontario-gov/permitsapi (branch: main)
+- Repo: enterprise/permitsapi (branch: main)
 - Issues: tagged #architecture-decision
 - Files: docs/security-policy.md, docs/aoda-requirements.md
 - Files: 07-databases/samples/schema.sql
@@ -96,8 +96,8 @@ Team prompts:
 Space: Modernization — WCF to .NET 8
 
 Sources:
-- Repo: ontario-gov/legacy-permits-wcf (old system)
-- Repo: ontario-gov/permits-api-net8 (new system)
+- Repo: enterprise/legacy-permits-wcf (old system)
+- Repo: enterprise/permits-api-net8 (new system)
 - Files: 05-app-modernization/docs/dotnet-modernization.md
 
 Team prompts:
@@ -109,7 +109,7 @@ Team prompts:
 ### Use Case 3 — Standards reference
 
 ```
-Space: Ontario Gov Development Standards
+Space: Enterprise Development Standards
 
 Sources:
 - .github/copilot-instructions.md
@@ -137,7 +137,7 @@ Team prompts:
 With the GitHub Remote MCP connected (Module 03), you can reference Spaces from VS Code:
 
 ```
-Using the Ontario Permits Space, what is the current status of the database migration ADR?
+Using the Enterprise Permits Space, what is the current status of the database migration ADR?
 ```
 
 ---

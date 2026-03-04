@@ -1,6 +1,6 @@
 # Context Management
 
-> **Goal:** Understand what fills Copilot's context window, how to maximise the signal-to-noise ratio, and what to do when working with large Ontario codebases.
+> **Goal:** Understand what fills Copilot's context window, how to maximise the signal-to-noise ratio, and what to do when working with large enterprise codebases.
 
 ---
 
@@ -130,9 +130,9 @@ Signs you're hitting the context limit:
 
 ---
 
-## Context Tips for Ontario Government Projects
+## Context Tips for Enterprise Projects
 
-Ontario's legacy systems often have large files. Strategies that work:
+Legacy enterprise systems often have large files. Strategies that work:
 
 | Scenario | Strategy |
 |---|---|

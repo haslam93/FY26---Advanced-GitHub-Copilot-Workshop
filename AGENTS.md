@@ -11,7 +11,7 @@
 
 ## Project Overview
 
-This is the **GitHub Copilot Advanced Workshop** repository for Ontario Government developers.
+This is the **GitHub Copilot Advanced Workshop** repository for enterprise developers.
 
 It contains 10 self-contained learning modules covering: customization, VS Code agents, MCP servers, Copilot CLI, App Modernization, QA & Testing, Databases, Models & Context, Copilot on GitHub.com, and a hands-on lab.
 

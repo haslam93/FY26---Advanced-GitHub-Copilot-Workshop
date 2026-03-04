@@ -35,7 +35,7 @@ mindmap
     E2E Tests
       Playwright MCP
       TypeScript test files
-      Ontario portal mock
+      Enterprise portal mock
       Accessibility checks
     Test Planning
       Agent mode
@@ -125,7 +125,7 @@ flowchart TD
 └── playwright-samples/
     ├── package.json
     ├── playwright.config.ts
-    ├── index.html                   ← Mock Ontario service portal
+    ├── index.html                   ← Mock enterprise service portal
     └── tests/
         ├── permit-submission.spec.ts
         ├── permit-search.spec.ts

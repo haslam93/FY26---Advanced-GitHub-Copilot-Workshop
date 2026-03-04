@@ -4,7 +4,7 @@
 --
 -- Target: SQL Server LocalDB / SQL Server 2019+
 -- Copilot prompt used to generate initial structure:
--- "Generate a T-SQL schema for an Ontario government permit management system.
+-- "Generate a T-SQL schema for an enterprise permit management system.
 --  Tables: Regions, Applicants, Permits, StatusHistory. Use nvarchar for
 --  all string columns, datetime2 for dates, and bit for booleans."
 -- =============================================================================
@@ -24,7 +24,7 @@ GO
 
 -- =============================================================================
 -- Table: Regions
--- Lookup table for Ontario government administrative regions.
+-- Lookup table for government administrative regions.
 -- =============================================================================
 IF OBJECT_ID('dbo.Regions', 'U') IS NOT NULL DROP TABLE dbo.Regions;
 GO
@@ -78,7 +78,7 @@ GO
 INSERT INTO dbo.Applicants (FullName, Email, Phone) VALUES
     (N'Jane Doe',         N'jane.doe@example.com',    N'416-555-0101'),
     (N'John Smith',       N'john.smith@example.com',  N'613-555-0102'),
-    (N'Ontario Builders', N'permits@ontbuild.ca',     N'905-555-0103'),
+    (N'Acme Builders',    N'permits@acmebuild.com',   N'905-555-0103'),
     (N'City of Hamilton', N'permits@hamilton.ca',     N'905-555-0104');
 GO
 

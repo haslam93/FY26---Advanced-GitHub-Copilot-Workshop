@@ -8,14 +8,12 @@
       "text": "This workspace is the GitHub Copilot Advanced Workshop repo. When generating workshop content, preserve the teaching intent and include explanatory inline comments."
     }
   ],
-
   // ─── Additional instruction file locations ─────────────────────────────────
   // VS Code will look for *.instructions.md files in these folders.
   // Default is .github/instructions — added here explicitly for visibility.
   "chat.instructionsFilesLocations": {
     ".github/instructions": true
   },
-
   // ─── mssql: Connection profile template (Module 07) ───────────────────────
   // Fill in your LocalDB instance name below, then reload VS Code.
   // Server: (localdb)\\MSSQLLocalDB  or  localhost\\SQLEXPRESS
@@ -26,16 +24,16 @@
       "authenticationType": "Integrated",
       "profileName": "OntarioPermits (LocalDB)",
       "password": "",
-      "savePassword": false
+      "savePassword": false,
+      "groupId": "ROOT",
+      "id": "E6C70ECC-76CB-43F8-9360-D30279FB79C1"
     }
   ],
-
   // ─── Editor: Recommended settings for workshop sessions ────────────────────
   "editor.formatOnSave": true,
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": true,
   "files.trimTrailingWhitespace": true,
-
   // ─── Extensions: Recommended file associations ─────────────────────────────
   "files.associations": {
     "*.prompt.md": "markdown",

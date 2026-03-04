@@ -91,7 +91,7 @@ flowchart TD
 ├── docs/
 │   ├── models-reference.md      ← Full model table with live data (2026-02-23)
 │   ├── context-management.md    ← Managing context windows effectively
-│   └── model-selection-guide.md ← Practical guide for Ontario devs
+│   └── model-selection-guide.md ← Practical guide for enterprise devs
 ```
 
 ---
@@ -116,7 +116,7 @@ flowchart TD
 |---|---|
 | **Default to GPT-4o for completions** | Zero cost — use it heavily in Edit mode |
 | **Escalate to Sonnet for Agent mode** | Complex multi-step tasks benefit from stronger reasoning |
-| **Use Gemini 3 Pro for large files** | 1M token context handles the largest Ontario codebases |
+| **Use Gemini 3 Pro for large files** | 1M token context handles the largest enterprise codebases |
 | **Reserve Opus for architecture reviews** | 3× cost is justified for high-stakes design decisions |
 | **Free plan? All 0× models are always free** | Your allowance is not consumed by zero-cost models |
 

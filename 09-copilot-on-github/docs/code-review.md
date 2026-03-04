@@ -36,7 +36,7 @@ Settings → Copilot → Code Review → Enable for PRs assigned to specific tea
 
 Create `.github/copilot-review-instructions.md` in your repository to give Copilot specific review criteria.
 
-### Example — OntarioPermits review instructions
+### Example — Permits review instructions
 
 ```markdown
 # Copilot Code Review Instructions
@@ -49,7 +49,7 @@ Create `.github/copilot-review-instructions.md` in your repository to give Copil
 - Flag any direct use of `new HttpClient()` — must use IHttpClientFactory
 - Flag logging of PII (email addresses, names, SINs, health card numbers)
 
-### Ontario Government Standards
+### Enterprise Standards
 - All public API endpoints must have XML documentation comments
 - Response types must use `IActionResult` or `ActionResult<T>` — not raw objects
 - Controllers must not contain business logic — delegate to services

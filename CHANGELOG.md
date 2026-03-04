@@ -18,7 +18,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Module 04 — Copilot CLI**: `gh copilot suggest/explain`, shell aliases, Copilot Fleet
 - **Module 05 — App Modernization**: .NET Upgrade Assistant, Java Modernization Assistant, legacy code samples
 - **Module 06 — QA & Testing**: xUnit + Moq, test plan generation, Playwright UI tests, accessibility testing
-- **Module 07 — Databases**: mssql extension, SQL prompting patterns, OntarioPermits schema, stored procedures
+- **Module 07 — Databases**: mssql extension, SQL prompting patterns, sample permits schema, stored procedures
 - **Module 08 — Models & Context**: full model reference table with premium multipliers (sourced 2026-02-23), context management guide
 - **Module 09 — Copilot on GitHub.com**: Coding Agent, Code Review in PRs, Copilot Spaces
 - **Module 10 — Hands-on Lab**: 5 self-contained exercises (~90 min total)

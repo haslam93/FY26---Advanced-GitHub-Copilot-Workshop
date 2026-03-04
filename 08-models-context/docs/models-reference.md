@@ -143,13 +143,13 @@ Alternatively, the `.vscode/settings.json` can pin a default model:
 
 ---
 
-## Ontario Government Recommendations
+## Enterprise Recommendations
 
 | Use case | Recommended model | Rationale |
 |---|---|---|
 | Daily code completions | GPT-4o | Zero cost, fast, excellent for .NET/C# |
 | Agent mode (large refactors) | Claude Sonnet 4.6 | 200k context, strong multi-step reasoning |
-| Large legacy codebase analysis | Gemini 3 Pro or Gemini 3.1 Pro | 1M token context for big Ontario codebases |
+| Large legacy codebase analysis | Gemini 3 Pro or Gemini 3.1 Pro | 1M token context for large enterprise codebases |
 | Architecture review | Claude Opus 4.6 | Deepest reasoning — worth the 3× for critical decisions |
 | Budget-conscious chat | Claude Haiku 4.5 | Fast, cheap, good for Q&A |
 | Free/trial accounts | GPT-4o | Always available, zero cost |

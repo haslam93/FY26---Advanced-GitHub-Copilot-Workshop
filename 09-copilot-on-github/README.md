@@ -89,7 +89,7 @@ mindmap
       GitHub Issues and PRs
       Code search
       Curated files
-    Ontario Use Cases
+    Enterprise Use Cases
       Internal API documentation
       Architecture decision records
       Security standards and policies

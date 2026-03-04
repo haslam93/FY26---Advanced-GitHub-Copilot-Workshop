@@ -71,7 +71,7 @@ In Agent mode, you can see which tools Copilot has access to by looking at the *
 
 Beyond skills, VS Code supports **custom agents** — fully defined AI agents with their own identity, tools, and instruction sets. Custom agents appear in the Copilot Chat `@mention` picker.
 
-Example: `@ontario-permit-bot` could be a custom agent configured with knowledge of the permit system's architecture and access to specific tools.
+Example: `@permit-bot` could be a custom agent configured with knowledge of the permit system's architecture and access to specific tools.
 
 See: [Create custom agents — VS Code Docs](https://code.visualstudio.com/docs/copilot/customization/custom-agents)
 

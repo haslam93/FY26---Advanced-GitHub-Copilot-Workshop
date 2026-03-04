@@ -119,7 +119,7 @@ not PENDING. Use _logger.LogWarning. Update the test to verify the log call.
 
 ---
 
-## Security and Governance — Ontario Government Notes
+## Security and Governance — Enterprise Notes
 
 | Consideration | Recommendation |
 |---|---|

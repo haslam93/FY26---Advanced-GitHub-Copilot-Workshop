@@ -348,7 +348,7 @@ const pres = new pptxgen();
 pres.layout = "LAYOUT_16x9";
 pres.author = "GitHub Copilot Advanced Workshop";
 pres.title = "GitHub Copilot Advanced Workshop";
-pres.subject = "Ontario Government — 10 Modules";
+pres.subject = "Enterprise Workshop — 10 Modules";
 
 // ══════════════════════════════════════════════════════════════════════════════
 // SLIDE 1 ─ COVER
@@ -377,7 +377,7 @@ pres.subject = "Ontario Government — 10 Modules";
         x: 0.55, y: 1.55, w: 8.5, h: 1.1,
         fontFace: FONT, fontSize: 50, bold: true, color: C.textPrimary, align: "left",
     });
-    s.addText("10 Modules  ·  Hands-on Lab  ·  Ontario Government", {
+    s.addText("10 Modules  ·  Hands-on Lab  ·  Enterprise Workshop", {
         x: 0.55, y: 2.75, w: 8.5, h: 0.4,
         fontFace: FONT, fontSize: 15, color: C.textMuted, align: "left",
     });
@@ -822,7 +822,7 @@ sectionSlide(pres, "04", "Copilot CLI", "AI agent in your terminal · interactiv
     ], 1.08, C.orange);
 
     addTable(s,
-        ["Ontario Scenario", "Why /fleet helps"],
+        ["Enterprise Scenario", "Why /fleet helps"],
         [
             ["Generate xUnit tests for all 8 service classes", "Each class's tests are independent — all 8 written simultaneously"],
             ["Add XML doc comments to all public interfaces", "Interfaces are independent — each processed by a separate subagent"],
@@ -1074,7 +1074,7 @@ sectionSlide(pres, "06", "QA & Testing", "xUnit · Moq · Playwright · AI-gener
         "    .fill('Jane Smith');",
         "  await page",
         "    .getByLabel('Email')",
-        "    .fill('jane@ontario.ca');",
+        "    .fill('jane@example.com');",
         "  await page",
         "    .getByLabel('Permit Type')",
         "    .selectOption('BUILDING');",
@@ -1277,7 +1277,7 @@ sectionSlide(pres, "09", "Copilot on GitHub.com", "Coding agents · AI code revi
     );
 
     cardPanel(s, 4.95, 0.7, 4.75, 4.5, C.orange);
-    s.addText("Ontario Governance Notes", { x: 5.07, y: 0.78, w: 4.5, h: 0.3, fontFace: FONT, fontSize: 12.5, bold: true, color: C.orange });
+    s.addText("Enterprise Governance Notes", { x: 5.07, y: 0.78, w: 4.5, h: 0.3, fontFace: FONT, fontSize: 12.5, bold: true, color: C.orange });
     addBullets(s, [
         "Agents can be restricted at org / enterprise level",
         "All activity logged in the PR session timeline",
@@ -1311,7 +1311,7 @@ sectionSlide(pres, "09", "Copilot on GitHub.com", "Coding agents · AI code revi
     codeBlock(s, [
         "# Security",
         "Flag ALL SQL string concatenation as high severity.",
-        "# Ontario Standards",
+        "# Enterprise Standards",
         "Require XML doc on all public members.",
         "# .NET 8",
         "Flag any .Result or .Wait() on Tasks.",
@@ -1336,7 +1336,7 @@ sectionSlide(pres, "09", "Copilot on GitHub.com", "Coding agents · AI code revi
         [
             ["Platform architecture Q&A", "ADR docs + design wikis + Confluence"],
             ["Modernization team onboarding", "Module 05 docs + samples + guides"],
-            ["Ontario standards reference", "copilot-instructions.md + security policy"],
+            ["Enterprise standards reference", "copilot-instructions.md + security policy"],
         ],
         5.07, 3.2, 4.55, [2.5, 2.05]
     );
@@ -1424,7 +1424,7 @@ sectionSlide(pres, "10", "Hands-On Lab", "5 exercises · 90 minutes · self-cont
 
     s.addShape("rect", { x: 0, y: H - 0.3, w: W, h: 0.3, fill: { color: C.bgCard }, line: { color: C.bgCard } });
     s.addShape("rect", { x: 0, y: H - 0.3, w: 0.3, h: 0.3, fill: { color: C.green }, line: { color: C.green } });
-    s.addText("March 2026  |  Province of Ontario  |  github.com/copilot", {
+    s.addText("March 2026  |  Enterprise Workshop  |  github.com/copilot", {
         x: 0.45, y: H - 0.3, w: 9.2, h: 0.3,
         fontFace: FONT, fontSize: 9, color: C.textMuted, align: "left", valign: "middle",
     });

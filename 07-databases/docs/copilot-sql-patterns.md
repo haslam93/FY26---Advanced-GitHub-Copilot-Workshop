@@ -113,7 +113,7 @@ Create a stored procedure dbo.usp_GetPermitsByApplicant that:
 - Validates @ApplicantId > 0
 - Returns all matching permits with region and applicant details
 - Uses TRY/CATCH
-- Follows Ontario naming convention (usp_ prefix)
+- Follows enterprise naming convention (usp_ prefix)
 ```
 
 ---
@@ -156,7 +156,7 @@ END
 **Prompt:**
 ```text
 Generate 100 rows of realistic test data for the dbo.Permits table.
-Use Ontario city names for description, realistic permit types, and random
+Use realistic city names for description, realistic permit types, and random
 statuses weighted toward PENDING (40%), APPROVED (30%), UNDER_REVIEW (20%),
 REJECTED (8%), CANCELLED (2%).
 Use ApplicantId values between 1–4 and RegionId values between 1–10.
@@ -179,7 +179,7 @@ Before committing any Copilot-generated SQL, verify:
 
 ---
 
-## Ontario Context Prompts
+## Enterprise Context Prompts
 
 These work especially well with the OntarioPermits schema:
 

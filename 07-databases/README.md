@@ -3,7 +3,7 @@
 [![Module](https://img.shields.io/badge/Module-07_Databases-0078d4?logo=github&logoColor=white)](.)
 [![Estimated Time](https://img.shields.io/badge/Time-35_min-informational)](.) [![Level](https://img.shields.io/badge/Level-Advanced-red)](.)
 
-> **Learning objectives:** Use the `mssql` VS Code extension with GitHub Copilot to write, explain, optimise, and document T-SQL for a real Ontario government schema. Use Copilot Chat to convert natural-language requirements into production-quality SQL.
+> **Learning objectives:** Use the `mssql` VS Code extension with GitHub Copilot to write, explain, optimise, and document T-SQL for a realistic enterprise schema. Use Copilot Chat to convert natural-language requirements into production-quality SQL.
 
 ---
 

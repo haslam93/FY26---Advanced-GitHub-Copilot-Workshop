@@ -1,5 +1,5 @@
 # GitHub Copilot Advanced Workshop
-### Government of Ontario — Developer Enablement Series
+### Enterprise Developer Enablement
 
 [![GitHub Copilot](https://img.shields.io/badge/GitHub_Copilot-Advanced-blue?logo=github&logoColor=white)](https://github.com/features/copilot)
 [![VS Code](https://img.shields.io/badge/VS_Code-Required-007ACC?logo=visualstudiocode&logoColor=white)](https://code.visualstudio.com/)
@@ -9,7 +9,7 @@
 
 ---
 
-> **Audience:** Ontario Government developers with basic Copilot familiarity, ready to move beyond autocomplete.
+> **Audience:** Enterprise developers with basic Copilot familiarity, ready to move beyond autocomplete.
 > **Duration:** Full-day workshop (~6.5 hours) or self-paced across multiple sessions.
 > **Format:** Each module is self-contained — work through them in any order.
 
@@ -25,7 +25,7 @@ By the end of this workshop, developers will be able to:
 - **Use Copilot in the terminal** with the standalone `copilot` CLI — an AI agent that can edit code, run git operations, interact with GitHub.com (PRs, issues, workflows), and run parallel subtasks via `/fleet`
 - **Modernize legacy applications** using the .NET Upgrade Assistant and Java Modernization Assistant alongside Copilot
 - **Generate high-quality tests** — xUnit unit tests, integration tests, and Playwright end-to-end tests — using Agent mode
-- **Write and optimize T-SQL** against a real Ontario government schema using the mssql extension and Copilot Chat
+- **Write and optimize T-SQL** against a realistic enterprise schema using the mssql extension and Copilot Chat
 - **Select the right AI model** for each task based on speed, reasoning depth, cost, and plan availability
 - **Use Copilot features on GitHub.com** — Coding Agent, AI code review on PRs, and Copilot Spaces
 
@@ -247,7 +247,7 @@ Pull requests are welcome. Please include a description of what changed and upda
 
 ## License
 
-[MIT](LICENSE) © 2026 — Created for Government of Ontario developer enablement.
+[MIT](LICENSE) © 2026 — Enterprise GitHub Copilot Advanced Workshop.
 
 ---
 

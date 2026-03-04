@@ -11,7 +11,7 @@ GO
 
 -- =============================================================================
 -- BEFORE: Legacy procedure — security and performance issues
--- (This is what legacy Ontario systems typically look like)
+-- (This is what legacy enterprise systems typically look like)
 --
 -- Issues flagged by Copilot:
 --   1. Dynamic SQL string concatenation → SQL injection risk
