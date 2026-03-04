@@ -6,8 +6,8 @@
 
 ## The 30-Second Rule
 
-> **Default:** Start with **GPT-4o** (0× cost).  
-> **Upgrade:** Switch to **Claude Sonnet 4.6** for multi-file Agent tasks.  
+> **Default:** Start with **GPT-4o** (0× cost).
+> **Upgrade:** Switch to **Claude Sonnet 4.6** for multi-file Agent tasks.
 > **Escalate:** Use **Claude Opus 4.6** only for critical architectural decisions.
 
 ---

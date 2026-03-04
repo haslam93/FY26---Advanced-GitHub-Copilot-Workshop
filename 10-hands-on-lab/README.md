@@ -67,13 +67,46 @@ mindmap
 ├── README.md                             ← This file
 ├── docs/
 │   └── prerequisites.md                 ← Checklist + validation commands
-└── exercises/
-    ├── exercise-01-customization.md
-    ├── exercise-02-background-agent.md
-    ├── exercise-03-mcp-github.md
-    ├── exercise-04-modernization.md
-    └── exercise-05-testing.md
+├── exercises/
+│   ├── exercise-01-customization.md
+│   ├── exercise-02-background-agent.md
+│   ├── exercise-03-mcp-github.md
+│   ├── exercise-04-modernization.md
+│   └── exercise-05-testing.md
+└── permit-dashboard/                     ← Streamlit demo app for Coding Agent
+    ├── app.py
+    ├── requirements.txt
+    ├── README.md
+    └── screenshots/
 ```
+
+---
+
+## 🎯 Bonus: Permit Dashboard Demo App
+
+As a bonus component, this module includes a **fully-functional Streamlit web application** perfect for demonstrating GitHub Coding Agent capabilities.
+
+### Features
+- 📊 **Interactive Analytics** - Real-time charts with Plotly
+- 📋 **Permit Tracker** - Search, filter, and submit applications  
+- 📈 **Trends Analysis** - Time-series and heatmap visualizations
+- ℹ️ **About Page** - Built-in documentation and demo ideas
+
+### Use Cases
+Use this app to demonstrate **GitHub Coding Agent on GitHub.com**:
+- Create issues requesting new features
+- Let Coding Agent implement changes automatically
+- Review and merge AI-generated pull requests
+- Iterate on features with natural language
+
+### Quick Start
+```bash
+cd permit-dashboard
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+👉 **[Full Documentation](permit-dashboard/README.md)** — Setup guide, screenshots, and GitHub Coding Agent prompts
 
 ---
 

@@ -55,8 +55,10 @@ GO
 --  7. Return only needed columns, not SELECT *"
 -- =============================================================================
 CREATE OR ALTER PROCEDURE dbo.usp_GetPermits
-    @Status  NVARCHAR(30)  = NULL,   -- Optional filter: PENDING, APPROVED, etc.
-    @Region  NVARCHAR(100) = NULL    -- Optional filter: region name
+    @Status  NVARCHAR(30)  = NULL,
+    -- Optional filter: PENDING, APPROVED, etc.
+    @Region  NVARCHAR(100) = NULL
+-- Optional filter: region name
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -65,27 +67,27 @@ BEGIN
     IF @Status IS NOT NULL AND @Status NOT IN (
         N'PENDING', N'UNDER_REVIEW', N'APPROVED', N'REJECTED', N'CANCELLED')
     BEGIN
-        THROW 50001, 'Invalid Status value. Must be one of: PENDING, UNDER_REVIEW, APPROVED, REJECTED, CANCELLED.', 1;
-    END
+    THROW 50001, 'Invalid Status value. Must be one of: PENDING, UNDER_REVIEW, APPROVED, REJECTED, CANCELLED.', 1;
+END
 
-    BEGIN TRY
+BEGIN TRY
         SELECT
-            p.PermitId,
-            a.FullName      AS ApplicantName,
-            a.Email,
-            r.Name          AS Region,
-            p.Type,
-            p.Status,
-            p.Description,
-            p.SubmittedAt,
-            p.UpdatedAt
-        FROM        dbo.Permits    p
-        INNER JOIN  dbo.Applicants a ON a.ApplicantId = p.ApplicantId
-        INNER JOIN  dbo.Regions    r ON r.RegionId    = p.RegionId
-        WHERE
+    p.PermitId,
+    a.FullName      AS ApplicantName,
+    a.Email,
+    r.Name          AS Region,
+    p.Type,
+    p.Status,
+    p.Description,
+    p.SubmittedAt,
+    p.UpdatedAt
+FROM dbo.Permits    p
+    INNER JOIN dbo.Applicants a ON a.ApplicantId = p.ApplicantId
+    INNER JOIN dbo.Regions    r ON r.RegionId    = p.RegionId
+WHERE
             (@Status IS NULL OR p.Status = @Status)
-            AND (@Region IS NULL OR r.Name = @Region)
-        ORDER BY    p.SubmittedAt DESC;
+    AND (@Region IS NULL OR r.Name = @Region)
+ORDER BY    p.SubmittedAt DESC;
     END TRY
     BEGIN CATCH
         THROW;  -- Re-raise with original error for caller to handle
@@ -94,9 +96,12 @@ END;
 GO
 
 -- Usage examples:
-EXEC dbo.usp_GetPermits;                                   -- All permits
-EXEC dbo.usp_GetPermits @Status = N'PENDING';              -- Pending only
-EXEC dbo.usp_GetPermits @Region = N'Toronto';              -- Toronto only
+EXEC dbo.usp_GetPermits;
+-- All permits
+EXEC dbo.usp_GetPermits @Status = N'PENDING';
+-- Pending only
+EXEC dbo.usp_GetPermits @Region = N'Toronto';
+-- Toronto only
 EXEC dbo.usp_GetPermits @Status = N'APPROVED', @Region = N'Ottawa';
 GO
 
@@ -136,7 +141,7 @@ BEGIN
     DECLARE @CurrentStatus NVARCHAR(30);
 
     SELECT @CurrentStatus = Status
-    FROM   dbo.Permits
+    FROM dbo.Permits
     WHERE  PermitId = @PermitId;
 
     IF @CurrentStatus IS NULL
@@ -148,9 +153,9 @@ BEGIN
 
     -- Validate transition is allowed
     IF NOT (
-           (@CurrentStatus = N'PENDING'      AND @NewStatus IN (N'UNDER_REVIEW', N'CANCELLED'))
+           (@CurrentStatus = N'PENDING' AND @NewStatus IN (N'UNDER_REVIEW', N'CANCELLED'))
         OR (@CurrentStatus = N'UNDER_REVIEW' AND @NewStatus IN (N'APPROVED', N'REJECTED', N'PENDING'))
-        OR (@CurrentStatus = N'REJECTED'     AND @NewStatus = N'PENDING')
+        OR (@CurrentStatus = N'REJECTED' AND @NewStatus = N'PENDING')
     )
     BEGIN
         DECLARE @Msg NVARCHAR(200) =
@@ -168,9 +173,11 @@ BEGIN
         WHERE  PermitId  = @PermitId;
 
         -- Write audit record
-        INSERT INTO dbo.StatusHistory (PermitId, OldStatus, NewStatus, ChangedBy, Notes)
-        VALUES (@PermitId, @CurrentStatus, @NewStatus,
-                ISNULL(@ChangedBy, SYSTEM_USER), @Notes);
+        INSERT INTO dbo.StatusHistory
+        (PermitId, OldStatus, NewStatus, ChangedBy, Notes)
+    VALUES
+        (@PermitId, @CurrentStatus, @NewStatus,
+            ISNULL(@ChangedBy, SYSTEM_USER), @Notes);
 
         COMMIT TRANSACTION;
 

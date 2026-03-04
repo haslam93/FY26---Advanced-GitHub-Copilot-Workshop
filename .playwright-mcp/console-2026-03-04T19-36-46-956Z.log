@@ -1,0 +1,2 @@
+[    6262ms] [ERROR] Failed to fetch metrics config: TimeoutError: signal timed out @ http://localhost:8501/static/js/index.Drusyo5m.js:154
+[    6263ms] [ERROR] Undefined metrics config - deactivating metrics tracking. @ http://localhost:8501/static/js/index.Drusyo5m.js:154
