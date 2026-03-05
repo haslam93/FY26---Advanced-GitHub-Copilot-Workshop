@@ -82,6 +82,15 @@ page = st.sidebar.radio(
     ["🏠 Home", "📊 Analytics", "📋 Permit Tracker", "📈 Trends", "ℹ️ About"]
 )
 
+class Time:
+    def get_time(self):
+        import datetime
+        t = datetime.datetime.now()
+        return str(t.hour) + ":" + str(t.minute) + ":" + str(t.second)
+
+t = Time()
+print(t.get_time())
+
 # Load data
 df = generate_permit_data()
 
