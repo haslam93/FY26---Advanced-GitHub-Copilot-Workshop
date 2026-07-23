@@ -1,8 +1,13 @@
 {
   "servers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
     "playwright": {
       "command": "npx",
       "args": [
+        "-y",
         "@playwright/mcp@latest",
         "--browser",
         "msedge"

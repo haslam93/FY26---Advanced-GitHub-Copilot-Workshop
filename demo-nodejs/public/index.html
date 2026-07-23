@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Copilot Workshop Task Board</title>
+  <style>
+    :root { color-scheme: dark; font-family: "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0d1117; color: #f0f6fc; }
+    main { max-width: 760px; margin: 0 auto; padding: 48px 24px; }
+    h1 { margin-bottom: 8px; font-size: 2.4rem; }
+    p { color: #9da7b3; }
+    form { display: flex; gap: 12px; margin: 28px 0; }
+    input { flex: 1; padding: 12px; border: 1px solid #3d444d; border-radius: 8px; background: #151b23; color: inherit; }
+    button { padding: 10px 16px; border: 0; border-radius: 8px; background: #7c3aed; color: white; cursor: pointer; }
+    ul { padding: 0; list-style: none; }
+    li { display: flex; align-items: center; gap: 12px; margin: 10px 0; padding: 14px; border: 1px solid #3d444d; border-radius: 10px; background: #151b23; }
+    li span { flex: 1; }
+    li.completed span { color: #8b949e; text-decoration: line-through; }
+    .secondary { background: #30363d; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Copilot Workshop Task Board</h1>
+    <p>A deliberately small Node.js app for completions, chat, agent, testing, and code review demos.</p>
+    <form id="task-form">
+      <input id="task-title" aria-label="Task title" minlength="3" placeholder="Add a demo task" required>
+      <button type="submit">Add task</button>
+    </form>
+    <ul id="task-list"></ul>
+  </main>
+  <script>
+    const list = document.querySelector("#task-list");
+    const form = document.querySelector("#task-form");
+    const input = document.querySelector("#task-title");
+
+    async function loadTasks() {
+      const response = await fetch("/api/tasks");
+      renderTasks(await response.json());
+    }
+
+    function renderTasks(tasks) {
+      list.replaceChildren(...tasks.map((task) => {
+        const item = document.createElement("li");
+        const title = document.createElement("span");
+        const toggle = document.createElement("button");
+        const remove = document.createElement("button");
+
+        item.className = task.completed ? "completed" : "";
+        title.textContent = task.title;
+        toggle.textContent = task.completed ? "Reopen" : "Complete";
+        toggle.dataset.action = "toggle";
+        toggle.dataset.id = task.id;
+        remove.textContent = "Delete";
+        remove.className = "secondary";
+        remove.dataset.action = "delete";
+        remove.dataset.id = task.id;
+        item.append(title, toggle, remove);
+        return item;
+      }));
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      await fetch("/api/tasks", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ title: input.value }),
+      });
+      input.value = "";
+      await loadTasks();
+    });
+
+    list.addEventListener("click", async (event) => {
+      const button = event.target.closest("button");
+      if (!button) return;
+      const method = button.dataset.action === "toggle" ? "PATCH" : "DELETE";
+      await fetch(`/api/tasks/${button.dataset.id}`, { method });
+      await loadTasks();
+    });
+
+    loadTasks();
+  </script>
+</body>
+</html>

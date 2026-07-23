@@ -1,7 +1,7 @@
 {
-  "name": "ontario-portal-e2e",
+  "name": "workshop-work-item-e2e",
   "version": "1.0.0",
-  "description": "Playwright E2E tests for Ontario service portal mock — Module 06",
+  "description": "Playwright E2E tests for a neutral workshop sample",
   "scripts": {
     "test": "playwright test",
     "test:headed": "playwright test --headed",
@@ -10,8 +10,8 @@
     "install:browsers": "playwright install chromium"
   },
   "devDependencies": {
-    "@playwright/test": "^1.45.0",
-    "@axe-core/playwright": "^4.9.0",
-    "serve": "^14.2.0"
+    "@playwright/test": "^1.61.1",
+    "@axe-core/playwright": "^4.12.1",
+    "serve": "^14.2.6"
   }
 }

@@ -14,21 +14,6 @@
   "chat.instructionsFilesLocations": {
     ".github/instructions": true
   },
-  // ─── mssql: Connection profile template (Module 07) ───────────────────────
-  // Fill in your LocalDB instance name below, then reload VS Code.
-  // Server: (localdb)\\MSSQLLocalDB  or  localhost\\SQLEXPRESS
-  "mssql.connections": [
-    {
-      "server": "(localdb)\\MSSQLLocalDB",
-      "database": "OntarioPermits",
-      "authenticationType": "Integrated",
-      "profileName": "OntarioPermits (LocalDB)",
-      "password": "",
-      "savePassword": false,
-      "groupId": "ROOT",
-      "id": "E6C70ECC-76CB-43F8-9360-D30279FB79C1"
-    }
-  ],
   // ─── Editor: Recommended settings for workshop sessions ────────────────────
   "editor.formatOnSave": true,
   "editor.bracketPairColorization.enabled": true,

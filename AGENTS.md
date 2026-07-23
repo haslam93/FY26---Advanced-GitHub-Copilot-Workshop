@@ -13,13 +13,12 @@
 
 This is the **GitHub Copilot Advanced Workshop** repository for enterprise developers.
 
-It contains 10 self-contained learning modules covering: customization, VS Code agents, MCP servers, Copilot CLI, App Modernization, QA & Testing, Databases, Models & Context, Copilot on GitHub.com, and a hands-on lab.
+It contains 10 self-contained learning modules covering customization, agent workflows, MCP servers, Copilot CLI, app modernization, QA and testing, the GitHub Copilot app, models and context, the Cloud agent, and a hands-on lab.
 
 ## Key Conventions (same as .github/copilot-instructions.md)
 
 - Language: C# 12 / .NET 8
 - Test framework: xUnit + Moq
-- SQL dialect: T-SQL (SQL Server)
 - Async/await throughout — no `.Result` or `.Wait()`
 - XML doc comments on all public members
 - Secrets in environment variables / `IConfiguration` only
@@ -28,5 +27,5 @@ It contains 10 self-contained learning modules covering: customization, VS Code 
 
 - When asked to modify workshop content, preserve the teaching intent of the file
 - When generating sample code, include inline comments explaining the Copilot technique being demonstrated
-- When editing SQL samples, target the `OntarioPermits` schema defined in `07-databases/samples/schema.sql`
+- Keep every example organization-neutral and use synthetic names and data
 - When suggesting improvements to instruction files, explain the rationale as a comment in the file

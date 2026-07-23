@@ -1,0 +1,10 @@
+{
+  "name": "copilot-workshop-node-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/task-store.test.js"
+  }
+}

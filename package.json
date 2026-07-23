@@ -1,4 +1,12 @@
 {
+  "name": "github-copilot-advanced-workshop",
+  "private": true,
+  "scripts": {
+    "build:slides": "node generate-presentation.js",
+    "build:slides:office": "npm run build:slides && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/finalize-pptx.ps1",
+    "test:demo": "node --test demo-nodejs/test/task-store.test.js",
+    "test": "npm run test:demo"
+  },
   "dependencies": {
     "pptxgenjs": "^4.0.1"
   }

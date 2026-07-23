@@ -1,0 +1,9 @@
+node_modules/
+bin/
+obj/
+.playwright-mcp/
+playwright-report/
+test-results/
+.DS_Store
+*.tmp
+*.log

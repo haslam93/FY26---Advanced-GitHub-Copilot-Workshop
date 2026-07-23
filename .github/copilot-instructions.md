@@ -23,7 +23,7 @@
 - Private fields: `_camelCase` (underscore prefix)
 - Constants: `UPPER_SNAKE_CASE`
 - Interfaces: `IInterfaceName` prefix
-- Async methods: suffix with `Async` (e.g. `GetPermitAsync`)
+- Async methods: suffix with `Async` (e.g. `GetWorkItemAsync`)
 
 ## Code Style
 
@@ -40,9 +40,9 @@
 - Format:
   ```csharp
   /// <summary>Brief one-line description.</summary>
-  /// <param name="permitId">The unique identifier of the permit.</param>
-  /// <returns>The permit, or null if not found.</returns>
-  /// <exception cref="ArgumentNullException">Thrown when <paramref name="permitId"/> is null.</exception>
+  /// <param name="workItemId">The unique identifier of the work item.</param>
+  /// <returns>The work item, or null if not found.</returns>
+  /// <exception cref="ArgumentNullException">Thrown when <paramref name="workItemId"/> is null.</exception>
   ```
 - Do not use XML docs on `private` members unless the logic is non-obvious
 
@@ -56,7 +56,7 @@
 ## Security
 
 - Never log sensitive data (passwords, tokens, PII) — mask or omit them
-- Use `IConfiguration` / environment variables for secrets — never hard-code connection strings
+- Use `IConfiguration` / environment variables for secrets — never hard-code credentials
 - Validate all user input before processing — use FluentValidation or Data Annotations
 - Prefer `IHttpClientFactory` over `new HttpClient()` to avoid socket exhaustion
 
@@ -80,4 +80,4 @@
 - When generating code for this repo, default to .NET 8 patterns and C# 12 features
 - Prefer minimal API style for new endpoints unless controller-based pattern is already in use
 - When refactoring legacy .NET Framework code, flag deprecated APIs with a `// LEGACY:` comment
-- When writing SQL, target T-SQL (SQL Server) syntax and prefer set-based operations over cursors
+- Keep examples organization-neutral and use synthetic data only

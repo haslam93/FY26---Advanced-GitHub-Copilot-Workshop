@@ -1,266 +1,104 @@
 # GitHub Copilot Advanced Workshop
-### Enterprise Developer Enablement
 
-[![GitHub Copilot](https://img.shields.io/badge/GitHub_Copilot-Advanced-blue?logo=github&logoColor=white)](https://github.com/features/copilot)
-[![VS Code](https://img.shields.io/badge/VS_Code-Required-007ACC?logo=visualstudiocode&logoColor=white)](https://code.visualstudio.com/)
-[![.NET](https://img.shields.io/badge/.NET-8+-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Last Updated](https://img.shields.io/badge/Last_Updated-March_2026-brightgreen)](CHANGELOG.md)
+[![GitHub Copilot](https://img.shields.io/badge/GitHub_Copilot-Advanced-7c3aed?logo=github)](https://github.com/features/copilot)
+[![Last updated](https://img.shields.io/badge/Updated-July_2026-2ea043)](CHANGELOG.md)
+[![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
----
+An advanced, hands-on workshop covering customization, local and cloud agents, MCP, GitHub Copilot CLI, the GitHub Copilot app, testing, modernization, models, and GitHub.com workflows.
 
-> **Audience:** Enterprise developers with basic Copilot familiarity, ready to move beyond autocomplete.
-> **Duration:** Full-day workshop (~6.5 hours) or self-paced across multiple sessions.
-> **Format:** Each module is self-contained — work through them in any order.
+> **Audience:** Developers and technical practitioners with basic Copilot experience
+> **Format:** Ten self-contained modules plus a 90-minute lab
+> **Content policy:** All examples are synthetic and organization-neutral
 
----
+## Learning outcomes
 
-## What You'll Learn
+Participants will be able to:
 
-By the end of this workshop, developers will be able to:
+- design repository instructions, path-specific instructions, prompt files, custom agents, skills, hooks, and plugins
+- choose between Ask, Plan, local Agent mode, subagents, Copilot CLI, the Copilot app, and cloud agent
+- connect trusted GitHub and Playwright MCP servers with least-privilege controls
+- use current Copilot CLI features including Rubber Duck, Chronicle, Research, Fleet, Autopilot, remote control, voice, plugins, skills, and app handoff
+- use the GitHub Copilot app for parallel isolated worktrees and visual session management
+- delegate work to the cloud agent and review the resulting branch or pull request
+- use Copilot Spaces and Copilot code review on GitHub.com
+- modernize legacy code incrementally and validate generated tests
+- select models and manage context without relying on a stale static model list
 
-- **Control Copilot's context** at the repository and workstation level using instruction files, prompt files, and `AGENTS.md`
-- **Choose the right agent mode** — Ask, Edit, Agent, Background Agent, or Cloud Agent — for any given task
-- **Connect Copilot to external systems** via MCP servers (Azure DevOps, Azure, GitHub, Playwright)
-- **Use Copilot in the terminal** with the standalone `copilot` CLI — an AI agent that can edit code, run git operations, interact with GitHub.com (PRs, issues, workflows), and run parallel subtasks via `/fleet`
-- **Modernize legacy applications** using the .NET Upgrade Assistant and Java Modernization Assistant alongside Copilot
-- **Generate high-quality tests** — xUnit unit tests, integration tests, and Playwright end-to-end tests — using Agent mode
-- **Write and optimize T-SQL** against a realistic enterprise schema using the mssql extension and Copilot Chat
-- **Select the right AI model** for each task based on speed, reasoning depth, cost, and plan availability
-- **Use Copilot features on GitHub.com** — Coding Agent, AI code review on PRs, and Copilot Spaces
+## Workshop map
 
----
+| # | Module | Focus | Time |
+|---|---|---|---:|
+| [01](01-customization/README.md) | **Customization** | Instructions, prompt files, custom agents, skills, hooks, plugins | 45 min |
+| [02](02-vscode-agents/README.md) | **Agent Workflows** | Ask, Plan, Agent mode, custom agents, subagents, supervision | 40 min |
+| [03](03-mcp-samples/README.md) | **MCP Servers** | GitHub and Playwright MCP, configuration, security | 35 min |
+| [04](04-copilot-cli/README.md) | **GitHub Copilot CLI** | Rubber Duck, Chronicle, Research, Fleet, delegation, remote control | 45 min |
+| [05](05-app-modernization/README.md) | **App Modernization** | Incremental .NET and Java modernization | 35 min |
+| [06](06-qa-testing/README.md) | **QA and Testing** | xUnit, Moq, Playwright, accessibility, test planning | 40 min |
+| [07](07-copilot-app/README.md) | **GitHub Copilot App** | Parallel worktrees, sessions, extensions, cloud sandboxes preview | 30 min |
+| [08](08-models-context/README.md) | **Models and Context** | Live model selection and context management | 25 min |
+| [09](09-cloud-agent/README.md) | **Cloud Agent** | GitHub-hosted agent, code review, Spaces, GitHub.com workflows | 45 min |
+| [10](10-hands-on-lab/README.md) | **Hands-on Lab** | Five guided exercises | 90 min |
 
-## Workshop Map
+## Quick start
 
-```mermaid
-mindmap
-  root((GitHub Copilot<br/>Advanced Workshop))
-    01 Customization
-      copilot-instructions.md
-      instructions.md files
-      AGENTS.md
-      Prompt Files
-      Org-level Instructions
-    02 VS Code Agents
-      Ask / Edit / Agent Mode
-      Background Agent
-      Cloud Agent
-      Sub-agents
-    03 MCP Servers
-      Azure DevOps MCP
-      Azure MCP
-      GitHub Remote MCP
-      Playwright MCP
-    04 Copilot CLI
-      copilot interactive mode
-      copilot plan mode
-      /fleet parallel subagents
-    05 App Modernization
-      .NET Upgrade Assistant
-      Java Modernization
-      Copilot-assisted Refactor
-    06 QA and Testing
-      Unit Tests with xUnit
-      Test Plan Generation
-      Playwright UI Tests
-    07 Databases
-      mssql Extension
-      SQL with Copilot
-      Stored Procedures
-    08 Models and Context
-      Model Comparison
-      Premium Multipliers
-      Context Management
-    09 Copilot on GitHub
-      Coding Agent
-      AI Code Review
-      Copilot Spaces
-    10 Hands-on Lab
-      5 Self-contained Exercises
-      90 Minutes
+```powershell
+git clone https://github.com/haslam93/FY26---Advanced-GitHub-Copilot-Workshop.git
+Set-Location FY26---Advanced-GitHub-Copilot-Workshop
+npm install
+npm test
+npm run build:slides:office
 ```
 
----
+Run the simple Node.js demo:
 
-## Module Navigation
+```powershell
+Set-Location demo-nodejs
+npm start
+```
 
-| # | Module | What It Covers | Time |
-|---|--------|----------------|------|
-| [01](01-customization/README.md) | **Customization** | `copilot-instructions.md`, `AGENTS.md`, `*.instructions.md` (file-based, `applyTo` globs), prompt files, agent skills, org-level instructions, instruction priority resolution | 45 min |
-| [02](02-vscode-agents/README.md) | **VS Code Agents** | Ask / Edit / Agent mode comparison, Background Agent (async, returns a PR), Copilot Cloud Agent, sub-agent delegation patterns, agent selection decision guide | 40 min |
-| [03](03-mcp-samples/README.md) | **MCP Servers** | Azure DevOps MCP (work items, PRs, pipelines), Azure MCP (resources, storage, Key Vault), GitHub Remote MCP (repos, issues), Playwright MCP (browser automation) — config + prompts for each | 30 min |
-| [04](04-copilot-cli/README.md) | **Copilot CLI** | Standalone `copilot` AI agent in your terminal — interactive sessions, plan mode (`Shift+Tab`), programmatic mode (`copilot -p "..."`), local code + GitHub.com tasks (PRs, issues, workflows), `/fleet` for parallel subagents, customization (MCP servers, custom agents, Copilot Memory) | 30 min |
-| [05](05-app-modernization/README.md) | **App Modernization** | .NET Upgrade Assistant (Framework 4.7 → .NET 8, incremental steps), Java Modernization Assistant (Java 8 → 17/21), hands-on legacy .NET Web API sample | 45 min |
-| [06](06-qa-testing/README.md) | **QA & Testing** | xUnit + Moq unit tests via `generate-tests` prompt, integration tests with `WebApplicationFactory`, Playwright end-to-end UI tests, Agent mode test planning | 50 min |
-| [07](07-databases/README.md) | **Databases** | mssql VS Code extension, natural-language → T-SQL with Copilot, real `OntarioPermits` schema (Regions, Applicants, Permits, StatusHistory), stored procedures, SQL security review | 35 min |
-| [08](08-models-context/README.md) | **Models & Context** | All Copilot-supported models (Anthropic, Google, OpenAI, xAI, GitHub), speed vs reasoning quadrant, premium request multipliers, context window management strategies | 25 min |
-| [09](09-copilot-on-github/README.md) | **Copilot on GitHub.com** | Copilot Coding Agent (issue → PR lifecycle), AI code review on pull requests, Copilot Spaces as knowledge hubs, `copilot-review-instructions.md` | 35 min |
-| [10](10-hands-on-lab/README.md) | **Hands-on Lab** | 5 self-contained exercises: Customization, Background Agent, GitHub Remote MCP, .NET Modernization, Test Generation — each 15 min, ~90 min total. **BONUS:** Permit Dashboard Streamlit app for GitHub Coding Agent demos | 90 min |
+Open <http://localhost:3000>.
 
-**Total guided workshop time: ~6.5 hours** (excluding breaks)
+## Repository structure
 
----
+```text
+.github/
+  agents/                       Custom-agent example
+  instructions/                 Path-specific instructions
+  prompts/                      IDE prompt files
+  skills/                       Presentation QA skill
+01-customization/
+02-vscode-agents/
+03-mcp-samples/
+04-copilot-cli/
+05-app-modernization/
+06-qa-testing/
+07-copilot-app/
+08-models-context/
+09-cloud-agent/
+10-hands-on-lab/
+demo-nodejs/                    Small dependency-free demonstration app
+generate-presentation.js        PowerPoint source
+GitHub-Copilot-Advanced-Workshop.pptx
+```
 
-## Quick Start
+## Validation
 
-```bash
-# 1. Clone the repo
-git clone https://github.com/your-org/GitHubCopilot-AdvancedRepo.git
-cd GitHubCopilot-AdvancedRepo
+```powershell
+npm test
+dotnet test 06-qa-testing\csharp-unit-tests
 
-# 2. Open in VS Code — Copilot instructions load automatically
-code .
-
-# 3. Verify VS Code extensions are installed (see Prerequisites below)
-
-# 4. For MCP samples — install Playwright browser (Module 03)
-cd 03-mcp-samples && npm install
+Set-Location 06-qa-testing\playwright-samples
+npm install
 npx playwright install chromium
-
-# 5. For QA/Testing — install Playwright test dependencies (Module 06)
-cd ../06-qa-testing/playwright-samples && npm install && npx playwright install
-
-# 6. For Database module — connect to LocalDB with the mssql extension (Module 07)
-#    Run: 07-databases/samples/schema.sql then 07-databases/samples/seed-data.sql
-
-# 7. For Hands-on Lab bonus — try the Permit Dashboard Streamlit app (Module 10)
-#    cd 10-hands-on-lab/permit-dashboard && pip install -r requirements.txt
-#    streamlit run app.py
-
-# 8. For CLI module — install the standalone Copilot CLI (Module 04)
-#    See: https://docs.github.com/en/copilot/how-tos/set-up/install-copilot-cli
-copilot --version   # verify after installing
+npm test
 ```
 
----
+The PowerPoint is generated from `generate-presentation.js`. `npm run build:slides` creates the cross-platform PptxGenJS output. On Windows with Microsoft PowerPoint installed, `npm run build:slides:office` also resaves the deck through PowerPoint for strict Office Open XML normalization.
 
-## Prerequisites
+## Accuracy notes
 
-| Requirement | Version | Install |
-|-------------|---------|---------|
-| VS Code | Latest stable | [code.visualstudio.com](https://code.visualstudio.com) |
-| GitHub Copilot extension | Latest | [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) |
-| GitHub Copilot Chat extension | Latest | [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat) |
-| .NET SDK | 8.0+ | [dot.net](https://dotnet.microsoft.com/download) |
-| Node.js | 20 LTS | [nodejs.org](https://nodejs.org) |
-| GitHub CLI | Latest | [cli.github.com](https://cli.github.com) |
-| SQL Server LocalDB | 2019+ | [Microsoft Docs](https://learn.microsoft.com/sql/database-engine/configure-windows/sql-server-express-localdb) |
-| mssql extension | Latest | [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ms-mssql.mssql) |
-| GitHub Copilot plan | Pro / Business / Enterprise | [github.com/features/copilot](https://github.com/features/copilot) |
-
-> **New to Copilot?** You need at minimum a **Copilot Pro** plan. Business/Enterprise plans unlock additional models and org-level policy features covered in Modules 08 and 09.
-
----
-
-## Repository Structure
-
-```
-GitHubCopilot-AdvancedRepo/
-├── .github/
-│   ├── copilot-instructions.md        ← Active repo-level instructions (live demo for Module 01)
-│   ├── instructions/
-│   │   ├── csharp-standards.instructions.md   ← File-based instructions (applyTo: **/*.cs)
-│   │   └── test-standards.instructions.md     ← File-based instructions (applyTo: **/*Tests.cs)
-│   └── prompts/                       ← Reusable prompt files (live demo for Module 01)
-│       ├── code-review.prompt.md
-│       ├── generate-tests.prompt.md
-│       ├── explain-legacy.prompt.md
-│       ├── sql-query.prompt.md
-│       └── modernize-dotnet.prompt.md
-├── AGENTS.md                          ← Multi-agent compatible always-on instructions (root level)
-├── CONTRIBUTING.md
-├── CHANGELOG.md
-├── LICENSE
-├── generate-presentation.js           ← Generates the workshop PPTX (Node.js + pptxgenjs)
-├── GitHub-Copilot-Advanced-Workshop.pptx  ← Pre-built workshop slide deck (GitHub dark theme)
-├── 01-customization/                  ← Instruction files, prompt files, agent skills, org instructions
-├── 02-vscode-agents/                  ← Background Agent, cloud agents, sub-agents, selection guide
-├── 03-mcp-samples/                    ← Azure DevOps, Azure, GitHub Remote, Playwright MCP configs
-│   ├── azure-devops-mcp/
-│   ├── azure-mcp/
-│   ├── github-remote-mcp/
-│   └── playwright-mcp/
-├── 04-copilot-cli/                    ← CLI features, Fleet, annotated demos
-├── 05-app-modernization/              ← .NET 4.7 sample, Java 8 sample, migration docs
-├── 06-qa-testing/                     ← xUnit tests, Playwright samples, test plan docs
-├── 07-databases/                      ← mssql config, OntarioPermits schema + seed data, SQL docs
-├── 08-models-context/                 ← Model reference table, multipliers, context management
-├── 09-copilot-on-github/              ← Coding Agent docs, code review setup, Spaces guide
-└── 10-hands-on-lab/                   ← 5 exercises + prerequisites checklist
-    ├── exercises/                     ← 5 self-contained exercise files
-    ├── docs/
-    └── permit-dashboard/              ← Streamlit demo app for GitHub Coding Agent practice
-        ├── app.py                     ← Full-featured dashboard with 5 pages
-        ├── requirements.txt
-        ├── README.md
-        └── screenshots/               ← Home, Analytics, Tracker, Trends, About
-```
-
-> **The `.github/` folder is a live demo.** The instruction files and prompt files there are *actively applied* to this repo whenever you open it in VS Code with GitHub Copilot. They are the hands-on demonstration for [Module 01](01-customization/README.md).
-
----
-
-## How to Use This Repo
-
-### Workshop Facilitators (Full Day)
-
-1. **Before the workshop:** Ensure all attendees have the prerequisites installed. Use `10-hands-on-lab/docs/prerequisites.md` as the pre-workshop checklist.
-2. **Modules 01–03** (morning): Customization → Agents → MCP Servers — these build the foundation.
-3. **Modules 04–07** (afternoon, first half): CLI → Modernization → Testing → Databases — practical, hands-on.
-4. **Modules 08–09** (afternoon, second half): Models & Context → GitHub.com features — strategic knowledge.
-5. **Module 10** (closing 90 min): Run the hands-on lab exercises as reinforcement. Attendees work independently; facilitator circulates.
-6. **Debrief:** Use the workshop PPTX (`GitHub-Copilot-Advanced-Workshop.pptx`) for framing, transitions, and wrap-up slides.
-
-### Self-Paced Learners
-
-Start with **[Module 01 — Customization](01-customization/README.md)**. The concepts there (instruction files, context control) underpin everything else. Then work through modules in any order — each `README.md` is designed to stand alone.
-
-**Suggested learning paths:**
-
-| Goal | Modules |
-|------|---------|
-| Focus on AI-assisted workflows | 01 → 02 → 09 |
-| Connect Copilot to your toolchain | 01 → 03 → 04 |
-| Improve code quality and testing | 01 → 06 → 07 |
-| Modernize a legacy .NET app | 01 → 05 → 06 → 10 |
-| Understand model costs/selection | 08 → 02 → 09 |
-
-### Experienced Copilot Users
-
-Jump directly to any module. Each `README.md` opens with a clear "What you'll learn" statement. The topics most likely to have new content for experienced users:
-
-- **Module 03** — MCP server configurations (new in 2025, evolving fast)
-- **Module 04** — Copilot CLI + `/fleet` (standalone `copilot` command with parallel subagents)
-- **Module 08** — Current model landscape and premium multiplier rates
-- **Module 09** — Copilot Coding Agent end-to-end lifecycle
-
----
-
-## Workshop Materials
-
-| Resource | Description |
-|----------|-------------|
-| [`GitHub-Copilot-Advanced-Workshop.pptx`](GitHub-Copilot-Advanced-Workshop.pptx) | Full slide deck — GitHub dark theme, 27 slides covering all 10 modules. Open in PowerPoint. Logo placeholder boxes are provided for you to drop in your org's logo. |
-| [`generate-presentation.js`](generate-presentation.js) | Node.js script that regenerates the PPTX from source. Run `node generate-presentation.js` after making changes. Requires `npm install pptxgenjs` in the repo root. |
-| [`.github/prompts/`](.github/prompts/) | 5 reusable prompt files — usable immediately in VS Code Chat (open via `@workspace /prompt`). |
-| [`10-hands-on-lab/exercises/`](10-hands-on-lab/exercises/) | 5 self-contained markdown exercise files for the lab session. |
-| [`10-hands-on-lab/permit-dashboard/`](10-hands-on-lab/permit-dashboard/) | **NEW:** Modern Streamlit demo app perfect for GitHub Coding Agent practice. 5-page dashboard with interactive analytics, permit tracker, and trends. Includes setup guide, 8+ enhancement prompts, and full screenshots. |
-
----
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding new content, fixing samples, or updating model data.
-
-Pull requests are welcome. Please include a description of what changed and update [CHANGELOG.md](CHANGELOG.md).
-
----
+GitHub Copilot changes quickly. The workshop avoids static model and pricing tables and links to live documentation for version-sensitive details. Before delivery, run `/help`, `/changelog`, and `/version` in Copilot CLI and verify preview features against the [Copilot feature matrix](https://docs.github.com/en/copilot/reference/copilot-feature-matrix).
 
 ## License
 
-[MIT](LICENSE) © 2026 — Enterprise GitHub Copilot Advanced Workshop.
-
----
-
-*See [CHANGELOG.md](CHANGELOG.md) for version history.*
+[MIT](LICENSE)

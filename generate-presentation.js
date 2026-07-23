@@ -1,1439 +1,539 @@
-/**
- * GitHub Copilot Advanced Workshop — Presentation Generator v2
- *
- * Full GitHub dark-mode theme (Primer Design System colours).
- * Logo placeholder boxes included wherever a logo would normally appear.
- *
- * Run: node generate-presentation.js
- */
-
 "use strict";
 
+const path = require("node:path");
 const pptxgen = require("pptxgenjs");
 
-// ─────────────────────────────────────────────────────────────────────────────
-// GITHUB PRIMER COLOUR PALETTE  (no # prefix — pptxgenjs rule)
-// ─────────────────────────────────────────────────────────────────────────────
+const pptx = new pptxgen();
+pptx.layout = "LAYOUT_16x9";
+pptx.author = "GitHub Copilot Advanced Workshop";
+pptx.company = "Workshop";
+pptx.subject = "Advanced GitHub Copilot workshop";
+pptx.title = "GitHub Copilot Advanced Workshop";
+pptx.lang = "en-US";
+pptx.theme = {
+  headFontFace: "Aptos Display",
+  bodyFontFace: "Aptos",
+  lang: "en-US",
+};
+pptx.defineSlideMaster({
+  title: "CONTENT",
+  background: { color: "F7F5FB" },
+  objects: [],
+  slideNumber: { x: 9.12, y: 5.22, w: 0.5, h: 0.22, fontFace: "Aptos", fontSize: 9.5, color: "5E5668", align: "right" },
+});
+const W = 10;
+const H = 5.625;
+const OUT = path.join(__dirname, "GitHub-Copilot-Advanced-Workshop.pptx");
+
 const C = {
-    // Backgrounds
-    bgCanvas: "0D1117",   // page / canvas background
-    bgCard: "161B22",   // card, header bar
-    bgOverlay: "21262D",   // code panels, subtle inset
-    bgHighlight: "1F2937",   // hover / highlight state
-
-    // Borders
-    border: "30363D",   // default border
-    borderMuted: "21262D",   // subtle border
-
-    // Foreground
-    textPrimary: "F0F6FC",   // white-ish headlines
-    textSecond: "C9D1D9",   // body text
-    textMuted: "8B949E",   // captions, hints
-    textLink: "58A6FF",   // links / blue accent
-
-    // Brand / Accent
-    green: "2DA44E",   // GitHub green — primary CTA
-    greenBright: "3FB950",   // highlighted green text on dark
-    blue: "58A6FF",   // informational
-    purple: "BC8CFF",   // AI / Copilot accent
-    orange: "F0883E",   // warning / CLI
-    red: "FF7B72",   // error / danger
-    yellow: "E3B341",   // caution / highlight
-
-    // Misc
-    white: "FFFFFF",
-    cobalLight: "79C0FF",   // lighter blue for code keywords
+  ink: "111018",
+  plum: "24143A",
+  violet: "7C3AED",
+  violetSoft: "EDE9FE",
+  mint: "14B8A6",
+  mintSoft: "CCFBF1",
+  coral: "F43F5E",
+  coralSoft: "FFE4E6",
+  amber: "F59E0B",
+  amberSoft: "FEF3C7",
+  sky: "0EA5E9",
+  skySoft: "E0F2FE",
+  paper: "F7F5FB",
+  white: "FFFFFF",
+  text: "24212B",
+  muted: "5E5668",
+  border: "DDD7E6",
+  darkMuted: "D0CAD7",
 };
 
-const FONT = "Segoe UI";
-const FONT_MONO = "Consolas";
-const W = 10;      // slide width (inches)
-const H = 5.625;   // slide height (inches)
-
-// ─────────────────────────────────────────────────────────────────────────────
-// LOGO PLACEHOLDER  — call on any slide where a real logo would sit
-// ─────────────────────────────────────────────────────────────────────────────
-function logoPlaceholder(slide, x, y, w, h, label) {
-    slide.addShape("rect", {
-        x, y, w, h,
-        fill: { color: C.bgOverlay },
-        line: { color: C.border, pt: 1, dashType: "lgDash" },
-    });
-    slide.addText(label || "[ Add GitHub Copilot logo here ]", {
-        x, y, w, h,
-        fontFace: FONT, fontSize: 9, color: C.textMuted,
-        align: "center", valign: "middle", italic: true,
-    });
+function addOrbit(slide, dark = false) {
+  const line = dark ? "5B4772" : "D8CFF0";
+  const fill = dark ? C.plum : C.violetSoft;
+  slide.addShape("ellipse", { x: 8.68, y: 0.18, w: 0.82, h: 0.82, fill: { color: fill, transparency: 70 }, line: { color: line, transparency: 25, width: 1.4 } });
+  slide.addShape("ellipse", { x: 9.12, y: 0.52, w: 0.22, h: 0.22, fill: { color: C.mint }, line: { color: C.mint } });
+  slide.addShape("ellipse", { x: 8.74, y: 0.25, w: 0.12, h: 0.12, fill: { color: C.coral }, line: { color: C.coral } });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SECTION DIVIDER SLIDE — dark canvas, green left stripe, logo placeholder
-// ─────────────────────────────────────────────────────────────────────────────
-function sectionSlide(pres, moduleNum, title, subtitle) {
-    const s = pres.addSlide();
-    s.background = { color: C.bgCanvas };
-
-    // Thick green left stripe
-    s.addShape("rect", { x: 0, y: 0, w: 0.28, h: H, fill: { color: C.green }, line: { color: C.green } });
-
-    // Green top accent rule
-    s.addShape("rect", { x: 0.28, y: 0, w: W - 0.28, h: 0.06, fill: { color: C.green }, line: { color: C.green } });
-
-    // Module badge (large number on the right)
-    s.addShape("rect", { x: 7.8, y: 0.5, w: 1.9, h: 1.9, fill: { color: C.bgCard }, line: { color: C.border, pt: 1 } });
-    s.addText(moduleNum, {
-        x: 7.8, y: 0.5, w: 1.9, h: 1.9,
-        fontFace: FONT, fontSize: 56, bold: true, color: C.green,
-        align: "center", valign: "middle",
-    });
-
-    // Title
-    s.addText(title, {
-        x: 0.55, y: 1.6, w: 7.0, h: 0.95,
-        fontFace: FONT, fontSize: 40, bold: true, color: C.textPrimary, align: "left",
-    });
-
-    if (subtitle) {
-        s.addText(subtitle, {
-            x: 0.55, y: 2.65, w: 7.2, h: 0.5,
-            fontFace: FONT, fontSize: 16, color: C.textMuted, align: "left", italic: true,
-        });
-    }
-
-    // Logo placeholder (top-right corner)
-    logoPlaceholder(s, 7.8, 2.8, 1.9, 0.7, "[ Add logo ]");
-
-    // Bottom bar
-    s.addShape("rect", { x: 0, y: H - 0.32, w: W, h: 0.32, fill: { color: C.bgCard }, line: { color: C.bgCard } });
-    s.addShape("rect", { x: 0, y: H - 0.32, w: 0.28, h: 0.32, fill: { color: C.green }, line: { color: C.green } });
-    s.addText("GitHub Copilot Advanced Workshop", {
-        x: 0.4, y: H - 0.32, w: 9.2, h: 0.32,
-        fontFace: FONT, fontSize: 9, color: C.textMuted, align: "left", valign: "middle",
-    });
-    return s;
+function addFooter(slide, dark = false) {
+  slide.addText("GitHub Copilot Advanced Workshop  |  July 2026", {
+    x: 0.35, y: 5.22, w: 5.9, h: 0.22,
+    fontFace: "Aptos", fontSize: 9.2, color: dark ? C.darkMuted : C.muted,
+    margin: 0,
+  });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CONTENT SLIDE — dark background, green-lined header, slide number
-// ─────────────────────────────────────────────────────────────────────────────
-function contentSlide(pres, title) {
-    const s = pres.addSlide();
-    s.background = { color: C.bgCanvas };
-
-    // Header bar
-    s.addShape("rect", { x: 0, y: 0, w: W, h: 0.6, fill: { color: C.bgCard }, line: { color: C.bgCard } });
-    // Green accent underline
-    s.addShape("rect", { x: 0, y: 0.6, w: W, h: 0.04, fill: { color: C.green }, line: { color: C.green } });
-    // Left green cap on header
-    s.addShape("rect", { x: 0, y: 0, w: 0.05, h: 0.6, fill: { color: C.green }, line: { color: C.green } });
-
-    s.addText(title, {
-        x: 0.2, y: 0.05, w: 9.4, h: 0.52,
-        fontFace: FONT, fontSize: 20, bold: true, color: C.textPrimary,
-        valign: "middle", margin: 0,
-    });
-
-    // Bottom bar
-    s.addShape("rect", { x: 0, y: H - 0.28, w: W, h: 0.28, fill: { color: C.bgCard }, line: { color: C.bgCard } });
-    s.addShape("rect", { x: 0, y: H - 0.28, w: W, h: 0.01, fill: { color: C.border }, line: { color: C.border } });
-    s.addText("GitHub Copilot Advanced Workshop", {
-        x: 0.2, y: H - 0.28, w: 9.6, h: 0.28,
-        fontFace: FONT, fontSize: 8, color: C.textMuted, align: "left", valign: "middle",
-    });
-    return s;
+function addSource(slide, text, url) {
+  slide.addText([{ text, options: { hyperlink: { url }, color: C.violet, underline: { color: C.violet } } }], {
+    x: 6.35, y: 5.21, w: 2.55, h: 0.22,
+    fontFace: "Aptos", fontSize: 8.3, align: "right", margin: 0,
+  });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** Bullet list on a dark slide */
-function addBullets(slide, items, opts) {
-    const rows = [];
-    for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        const text = typeof item === "string" ? item : item.text;
-        const level = (typeof item === "object" && item.level) ? item.level : 0;
-        const isLast = (i === items.length - 1);
-        const isBold = (typeof item === "object" && item.bold);
-        const itemColor = (typeof item === "object" && item.color) ? item.color : (opts.color || C.textSecond);
-        rows.push({
-            text,
-            options: {
-                bullet: { type: "bullet", characterCode: level === 0 ? "25B8" : "25BA" },
-                indentLevel: level,
-                fontSize: opts.fontSize || 13,
-                color: isBold ? C.textPrimary : itemColor,
-                breakLine: !isLast,
-                bold: isBold || false,
-            },
-        });
-    }
-    slide.addText(rows, {
-        x: opts.x != null ? opts.x : 0.35,
-        y: opts.y != null ? opts.y : 0.8,
-        w: opts.w || 9.3,
-        h: opts.h || 4.3,
-        fontFace: FONT,
-        valign: "top",
+function addTitle(slide, module, title, subtitle) {
+  slide.addShape("roundRect", {
+    x: 0.34, y: 0.28, w: 0.58, h: 0.42,
+    rectRadius: 0.08,
+    fill: { color: C.violet },
+    line: { color: C.violet },
+  });
+  slide.addText(module, {
+    x: 0.34, y: 0.28, w: 0.58, h: 0.42,
+    fontFace: "Aptos", fontSize: 14, bold: true, color: C.white,
+    align: "center", valign: "mid", margin: 0,
+  });
+  slide.addText(title, {
+    x: 1.08, y: 0.22, w: 7.45, h: 0.52,
+    fontFace: "Aptos Display", fontSize: 27, bold: true, color: C.text,
+    margin: 0,
+  });
+  if (subtitle) {
+    slide.addText(subtitle, {
+      x: 1.1, y: 0.72, w: 7.6, h: 0.28,
+      fontFace: "Aptos", fontSize: 11, color: C.muted, margin: 0,
     });
+  }
+  addOrbit(slide, false);
 }
 
-/** Dark-theme table */
-function addTable(slide, headers, rows, x, y, w, colW) {
-    const data = [];
-
-    // Header row
-    const hrow = headers.map((h) => ({
-        text: h,
-        options: {
-            bold: true,
-            fontSize: 11,
-            color: C.greenBright,
-            fill: { color: C.bgOverlay },
-            align: "center",
-            border: [
-                { type: "none" },
-                { type: "none" },
-                { pt: 1, color: C.green, type: "solid" },
-                { type: "none" },
-            ],
-        },
-    }));
-    data.push(hrow);
-
-    // Data rows
-    rows.forEach((row, ri) => {
-        const drow = row.map((cell, ci) => ({
-            text: String(cell),
-            options: {
-                fontSize: 10,
-                color: ci === 0 ? C.textPrimary : C.textSecond,
-                fill: { color: ri % 2 === 0 ? C.bgCanvas : C.bgCard },
-                align: ci === 0 ? "left" : "center",
-                bold: ci === 0,
-                border: { pt: 1, color: C.border, type: "solid" },
-            },
-        }));
-        data.push(drow);
-    });
-
-    slide.addTable(data, {
-        x, y, w,
-        colW,
-        rowH: 0.3,
-        border: { pt: 1, color: C.border },
-    });
+function contentSlide(module, title, subtitle) {
+  const slide = pptx.addSlide("CONTENT");
+  addTitle(slide, module, title, subtitle);
+  addFooter(slide, false);
+  return slide;
 }
 
-/** GitHub-style dark code block */
-function codeBlock(slide, codeLines, x, y, w, h, lang) {
-    // Panel background
-    slide.addShape("rect", {
-        x, y, w, h,
-        fill: { color: C.bgCard },
-        line: { color: C.border, pt: 1 },
-    });
-    // Top tab with language label
-    if (lang) {
-        slide.addShape("rect", {
-            x, y, w, h: 0.24,
-            fill: { color: C.bgOverlay },
-            line: { color: C.border, pt: 1 },
-        });
-        slide.addText(lang, {
-            x: x + 0.12, y: y + 0.03, w: 2.0, h: 0.18,
-            fontFace: FONT_MONO, fontSize: 8, color: C.textMuted,
-        });
-        // Copy icon placeholder
-        slide.addShape("rect", {
-            x: x + w - 0.32, y: y + 0.04, w: 0.2, h: 0.16,
-            fill: { color: C.border }, line: { color: C.border },
-        });
-    }
-    slide.addText(codeLines.join("\n"), {
-        x: x + 0.14,
-        y: y + (lang ? 0.27 : 0.1),
-        w: w - 0.28,
-        h: h - (lang ? 0.32 : 0.15),
-        fontFace: FONT_MONO,
-        fontSize: 9.5,
-        color: C.greenBright,
-        valign: "top",
-        wrap: true,
-    });
+function sectionSlide(module, title, subtitle, accent = C.violet) {
+  const slide = pptx.addSlide();
+  slide.background = { color: C.ink };
+  slide.addShape("rect", { x: 0, y: 0, w: 0.22, h: H, fill: { color: accent }, line: { color: accent } });
+  slide.addShape("ellipse", { x: 7.5, y: 0.65, w: 1.7, h: 1.7, fill: { color: C.plum }, line: { color: "51376A", width: 1.4 } });
+  slide.addShape("ellipse", { x: 9.0, y: 0.72, w: 0.44, h: 0.44, fill: { color: C.mint }, line: { color: C.mint } });
+  slide.addShape("ellipse", { x: 7.28, y: 2.2, w: 0.25, h: 0.25, fill: { color: C.coral }, line: { color: C.coral } });
+  slide.addText(module, {
+    x: 7.5, y: 0.65, w: 1.7, h: 1.7,
+    fontFace: "Aptos Display", fontSize: 44, bold: true, color: accent,
+    align: "center", valign: "mid", margin: 0,
+  });
+  slide.addText(title, {
+    x: 0.72, y: 1.55, w: 6.6, h: 1.15,
+    fontFace: "Aptos Display", fontSize: 39, bold: true, color: C.white,
+    margin: 0, breakLine: false,
+  });
+  slide.addText(subtitle, {
+    x: 0.75, y: 2.85, w: 7.1, h: 0.7,
+    fontFace: "Aptos", fontSize: 18.5, color: C.darkMuted,
+    margin: 0,
+  });
+  slide.addShape("roundRect", {
+    x: 0.75, y: 4.22, w: 3.05, h: 0.52,
+    rectRadius: 0.08,
+    fill: { color: C.plum },
+    line: { color: "51376A" },
+  });
+  slide.addText("Repository module " + module, {
+    x: 0.75, y: 4.22, w: 3.05, h: 0.52,
+    fontFace: "Aptos", fontSize: 13, bold: true, color: C.mint,
+    align: "center", valign: "mid", margin: 0,
+  });
+  addFooter(slide, true);
+  return slide;
 }
 
-/** Dark stat callout box */
-function statCallout(slide, value, label, x, y, accentColor) {
-    const bg = accentColor || C.green;
-    slide.addShape("rect", {
-        x, y, w: 2.15, h: 1.05,
-        fill: { color: C.bgCard },
-        line: { color: bg, pt: 2 },
+function card(slide, x, y, w, h, title, body, accent = C.violet, fill = C.white) {
+  slide.addShape("roundRect", {
+    x, y, w, h, rectRadius: 0.08,
+    fill: { color: fill },
+    line: { color: C.border, width: 1 },
+    shadow: { type: "outer", color: "6D5D80", blur: 2, offset: 1, angle: 45, opacity: 0.1 },
+  });
+  slide.addShape("roundRect", {
+    x: x + 0.18, y: y + 0.17, w: 0.12, h: h - 0.34, rectRadius: 0.04,
+    fill: { color: accent }, line: { color: accent },
+  });
+  slide.addText(title, {
+    x: x + 0.42, y: y + 0.16, w: w - 0.58, h: 0.34,
+    fontFace: "Aptos Display", fontSize: 14, bold: true, color: C.text,
+    margin: 0,
+  });
+  if (Array.isArray(body)) {
+    bulletList(slide, body, x + 0.42, y + 0.56, w - 0.58, h - 0.68, C.muted, 11);
+  } else {
+    slide.addText(body, {
+      x: x + 0.42, y: y + 0.57, w: w - 0.58, h: h - 0.72,
+      fontFace: "Aptos", fontSize: 11.2, color: C.muted,
+      margin: 0.02, valign: "top", breakLine: false,
     });
-    // Top colour strip
-    slide.addShape("rect", {
-        x, y, w: 2.15, h: 0.1,
-        fill: { color: bg }, line: { color: bg },
+  }
+}
+
+function bulletList(slide, items, x, y, w, h, color = C.text, fontSize = 12) {
+  const runs = [];
+  items.forEach((item, index) => {
+    runs.push({
+      text: item,
+      options: {
+        bullet: true,
+        breakLine: index < items.length - 1,
+        color,
+        fontSize,
+        paraSpaceAfterPt: 6,
+      },
     });
-    slide.addText(value, {
-        x, y: y + 0.1, w: 2.15, h: 0.6,
-        fontFace: FONT, fontSize: 32, bold: true, color: accentColor || C.green, align: "center",
+  });
+  slide.addText(runs, {
+    x, y, w, h,
+    fontFace: "Aptos",
+    color,
+    fontSize,
+    margin: 0.05,
+    breakLine: false,
+    valign: "top",
+  });
+}
+
+function pill(slide, text, x, y, w, color, fill) {
+  slide.addShape("roundRect", {
+    x, y, w, h: 0.38, rectRadius: 0.12,
+    fill: { color: fill },
+    line: { color, transparency: 35 },
+  });
+  slide.addText(text, {
+    x, y, w, h: 0.38,
+    fontFace: "Aptos", fontSize: 10, bold: true, color,
+    align: "center", valign: "mid", margin: 0,
+  });
+}
+
+function flow(slide, labels, x, y, w, accent = C.violet) {
+  const gap = 0.3;
+  const boxW = (w - gap * (labels.length - 1)) / labels.length;
+  labels.forEach((label, index) => {
+    const boxX = x + index * (boxW + gap);
+    slide.addShape("roundRect", {
+      x: boxX, y, w: boxW, h: 0.82, rectRadius: 0.08,
+      fill: { color: index % 2 === 0 ? C.white : C.violetSoft },
+      line: { color: index === labels.length - 1 ? C.mint : C.border, width: 1.1 },
     });
     slide.addText(label, {
-        x, y: y + 0.7, w: 2.15, h: 0.3,
-        fontFace: FONT, fontSize: 9, color: C.textMuted, align: "center",
+      x: boxX + 0.08, y: y + 0.1, w: boxW - 0.16, h: 0.62,
+      fontFace: "Aptos", fontSize: 10.5, bold: true, color: index === labels.length - 1 ? C.mint : C.text,
+      align: "center", valign: "mid", margin: 0.02,
     });
-}
-
-/** Dark card panel (replaces offWhite panels) */
-function cardPanel(slide, x, y, w, h, accentColor) {
-    slide.addShape("rect", {
-        x, y, w, h,
-        fill: { color: C.bgCard },
-        line: { color: accentColor || C.border, pt: 1 },
-    });
-    if (accentColor) {
-        slide.addShape("rect", { x, y, w: 0.08, h, fill: { color: accentColor }, line: { color: accentColor } });
+    if (index < labels.length - 1) {
+      slide.addText(">", {
+        x: boxX + boxW, y: y + 0.24, w: gap, h: 0.3,
+        fontFace: "Aptos Display", fontSize: 13, bold: true, color: accent,
+        align: "center", margin: 0,
+      });
     }
+  });
 }
 
-/** Flow diagram row: array of {label, sub?} -> connected boxes with arrows */
-function flowDiagram(slide, steps, y, accentColor) {
-    const boxW = (W - 0.6) / steps.length - 0.15;
-    const gap = 0.15;
-    const arrowColor = accentColor || C.green;
-
-    steps.forEach((st, i) => {
-        const x = 0.3 + i * (boxW + gap);
-
-        // Box
-        slide.addShape("roundRect", {
-            x, y, w: boxW, h: 0.72,
-            fill: { color: i === 0 ? arrowColor : C.bgCard },
-            line: { color: i === 0 ? arrowColor : C.border, pt: 1 },
-            rectRadius: 0.08,
-        });
-        slide.addText(st.label, {
-            x, y: y + 0.04, w: boxW, h: 0.36,
-            fontFace: FONT, fontSize: 10.5, bold: true,
-            color: i === 0 ? C.white : C.textPrimary,
-            align: "center",
-        });
-        if (st.sub) {
-            slide.addText(st.sub, {
-                x, y: y + 0.38, w: boxW, h: 0.28,
-                fontFace: FONT, fontSize: 8.5, color: i === 0 ? C.white : C.textMuted,
-                align: "center",
-            });
-        }
-
-        // Arrow connector (except after last)
-        if (i < steps.length - 1) {
-            const ax = x + boxW + 0.01;
-            slide.addShape("rightArrow", {
-                x: ax, y: y + 0.24, w: gap + 0.08, h: 0.24,
-                fill: { color: arrowColor },
-                line: { color: arrowColor },
-            });
-        }
-    });
+function stat(slide, value, label, x, y, w, color, fill) {
+  slide.addShape("roundRect", { x, y, w, h: 1.05, rectRadius: 0.08, fill: { color: fill }, line: { color, transparency: 50 } });
+  slide.addText(value, { x, y: y + 0.12, w, h: 0.46, fontFace: "Aptos Display", fontSize: 27, bold: true, color, align: "center", margin: 0 });
+  slide.addText(label, { x: x + 0.1, y: y + 0.62, w: w - 0.2, h: 0.24, fontFace: "Aptos", fontSize: 9.5, color: C.muted, align: "center", margin: 0 });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// BUILD PRESENTATION
-// ─────────────────────────────────────────────────────────────────────────────
-const pres = new pptxgen();
-pres.layout = "LAYOUT_16x9";
-pres.author = "GitHub Copilot Advanced Workshop";
-pres.title = "GitHub Copilot Advanced Workshop";
-pres.subject = "Enterprise Workshop — 10 Modules";
-
-// ══════════════════════════════════════════════════════════════════════════════
-// SLIDE 1 ─ COVER
-// ══════════════════════════════════════════════════════════════════════════════
+// 1. Cover
 {
-    const s = pres.addSlide();
-    s.background = { color: C.bgCanvas };
-
-    // Green left stripe
-    s.addShape("rect", { x: 0, y: 0, w: 0.3, h: H, fill: { color: C.green }, line: { color: C.green } });
-    // Purple accent stripe
-    s.addShape("rect", { x: 0.3, y: 0, w: 0.06, h: H, fill: { color: C.purple }, line: { color: C.purple } });
-
-    // Logo placeholder (top-right)
-    logoPlaceholder(s, 7.85, 0.15, 1.85, 0.85, "[ Add GitHub Copilot logo ]");
-
-    // Copilot icon placeholder (left, decorative)
-    logoPlaceholder(s, 0.55, 0.7, 1.2, 1.2, "[ Copilot icon ]");
-
-    // Title text
-    s.addText("GitHub Copilot", {
-        x: 0.55, y: 1.1, w: 8, h: 0.52,
-        fontFace: FONT, fontSize: 22, color: C.green, align: "left",
-    });
-    s.addText("Advanced Workshop", {
-        x: 0.55, y: 1.55, w: 8.5, h: 1.1,
-        fontFace: FONT, fontSize: 50, bold: true, color: C.textPrimary, align: "left",
-    });
-    s.addText("10 Modules  ·  Hands-on Lab  ·  Enterprise Workshop", {
-        x: 0.55, y: 2.75, w: 8.5, h: 0.4,
-        fontFace: FONT, fontSize: 15, color: C.textMuted, align: "left",
-    });
-
-    // Pill badges row
-    const pills = [
-        { label: "C# 12 / .NET 8", border: C.blue },
-        { label: "MCP Servers", border: C.purple },
-        { label: "Copilot CLI  GA", border: C.green },
-        { label: "Fleet", border: C.orange },
-        { label: "AI Code Review", border: C.textMuted },
-    ];
-    pills.forEach((p, i) => {
-        const x = 0.55 + i * 1.87;
-        s.addShape("roundRect", { x, y: 3.3, w: 1.72, h: 0.38, fill: { color: C.bgCard }, line: { color: p.border, pt: 1.5 }, rectRadius: 0.1 });
-        s.addText(p.label, { x, y: 3.3, w: 1.72, h: 0.38, fontFace: FONT, fontSize: 10.5, color: C.textSecond, align: "center", valign: "middle" });
-    });
-
-    // Bottom bar
-    s.addShape("rect", { x: 0, y: H - 0.3, w: W, h: 0.3, fill: { color: C.bgCard }, line: { color: C.bgCard } });
-    s.addShape("rect", { x: 0, y: H - 0.3, w: 0.3, h: 0.3, fill: { color: C.green }, line: { color: C.green } });
-    s.addText("March 2026  |  github.com/copilot  |  docs.github.com/en/copilot", {
-        x: 0.45, y: H - 0.3, w: 9.2, h: 0.3,
-        fontFace: FONT, fontSize: 9, color: C.textMuted, align: "left", valign: "middle",
-    });
+  const slide = pptx.addSlide();
+  slide.background = { color: C.ink };
+  slide.addShape("rect", { x: 0, y: 0, w: 0.24, h: H, fill: { color: C.violet }, line: { color: C.violet } });
+  slide.addShape("rect", { x: 0.24, y: 0, w: 0.07, h: H, fill: { color: C.mint }, line: { color: C.mint } });
+  slide.addText("GITHUB COPILOT", { x: 0.72, y: 0.74, w: 4.6, h: 0.34, fontFace: "Aptos", fontSize: 14, bold: true, charSpacing: 2.5, color: C.mint, margin: 0 });
+  slide.addText("Advanced\nWorkshop", { x: 0.7, y: 1.25, w: 6.2, h: 1.7, fontFace: "Aptos Display", fontSize: 49, bold: true, color: C.white, margin: 0, breakLine: false });
+  slide.addText("Customization, agents, MCP, CLI, desktop app, testing, and cloud workflows", { x: 0.75, y: 3.18, w: 6.6, h: 0.68, fontFace: "Aptos", fontSize: 17, color: C.darkMuted, margin: 0 });
+  pill(slide, "10 modules", 0.75, 4.16, 1.35, C.violet, C.plum);
+  pill(slide, "Hands-on", 2.25, 4.16, 1.35, C.mint, "153D3A");
+  pill(slide, "July 2026", 3.75, 4.16, 1.35, C.coral, "46212A");
+  slide.addShape("ellipse", { x: 7.2, y: 0.8, w: 2.05, h: 2.05, fill: { color: C.plum }, line: { color: "654580", width: 1.5 } });
+  slide.addShape("ellipse", { x: 7.74, y: 1.34, w: 0.98, h: 0.98, fill: { color: C.violet }, line: { color: C.violet } });
+  slide.addShape("ellipse", { x: 8.5, y: 0.92, w: 0.38, h: 0.38, fill: { color: C.mint }, line: { color: C.mint } });
+  slide.addShape("ellipse", { x: 7.24, y: 2.28, w: 0.3, h: 0.3, fill: { color: C.coral }, line: { color: C.coral } });
+  slide.addText("LOCAL", { x: 7.73, y: 1.62, w: 1.0, h: 0.25, fontFace: "Aptos", fontSize: 12, bold: true, color: C.white, align: "center", margin: 0 });
+  slide.addText("APP", { x: 6.95, y: 3.1, w: 0.9, h: 0.28, fontFace: "Aptos", fontSize: 11, bold: true, color: C.mint, align: "center", margin: 0 });
+  slide.addText("CLI", { x: 8.12, y: 3.45, w: 0.9, h: 0.28, fontFace: "Aptos", fontSize: 11, bold: true, color: C.violet, align: "center", margin: 0 });
+  slide.addText("CLOUD", { x: 8.48, y: 4.02, w: 1.2, h: 0.28, fontFace: "Aptos", fontSize: 11, bold: true, color: C.coral, align: "center", margin: 0 });
+  addFooter(slide, true);
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// SLIDE 2 ─ AGENDA
-// ══════════════════════════════════════════════════════════════════════════════
+// 2. Agenda
 {
-    const s = contentSlide(pres, "Workshop Agenda — 10 Modules");
-
-    const leftMods = [
-        { text: "01  Customization & Instruction Files", bold: true, color: C.green },
-        { text: "    Always-on instructions, prompt files, file-based scoping", level: 1 },
-        { text: "02  VS Code Agent Modes", bold: true, color: C.blue },
-        { text: "    Ask / Edit / Agent / Background — when to use each", level: 1 },
-        { text: "03  MCP Servers", bold: true, color: C.purple },
-        { text: "    Azure DevOps, Azure, GitHub, Playwright", level: 1 },
-        { text: "04  Copilot CLI  (GA)", bold: true, color: C.orange },
-        { text: "    suggest, explain, fleet, shell aliases", level: 1 },
-        { text: "05  App Modernization", bold: true, color: C.yellow },
-        { text: "    .NET Upgrade Assistant · Java 8 → 21", level: 1 },
-    ];
-
-    const rightMods = [
-        { text: "06  QA & Testing", bold: true, color: C.greenBright },
-        { text: "    xUnit test generation, Playwright + MCP", level: 1 },
-        { text: "07  Databases", bold: true, color: C.cobalLight },
-        { text: "    mssql extension, SQL patterns, stored procs", level: 1 },
-        { text: "08  Models & Context", bold: true, color: C.purple },
-        { text: "    23 models, selection guide, context tips", level: 1 },
-        { text: "09  Copilot on GitHub.com", bold: true, color: C.blue },
-        { text: "    Coding agents, AI review, Spaces", level: 1 },
-        { text: "10  Hands-on Lab", bold: true, color: C.orange },
-        { text: "    5 exercises · 90 min · self-contained", level: 1 },
-    ];
-
-    cardPanel(s, 0.25, 0.75, 4.6, 4.45, C.green);
-    addBullets(s, leftMods, { x: 0.5, y: 0.82, w: 4.3, h: 4.3, fontSize: 11.5 });
-
-    s.addShape("rect", { x: 4.9, y: 0.75, w: 0.03, h: 4.45, fill: { color: C.border }, line: { color: C.border } });
-
-    cardPanel(s, 4.95, 0.75, 4.8, 4.45, C.blue);
-    addBullets(s, rightMods, { x: 5.2, y: 0.82, w: 4.5, h: 4.3, fontSize: 11.5 });
+  const slide = contentSlide("00", "Workshop map", "A progression from customization to cloud delivery");
+  const modules = [
+    ["01", "Customization", C.violet],
+    ["02", "Agent workflows", C.mint],
+    ["03", "MCP servers", C.sky],
+    ["04", "Copilot CLI", C.coral],
+    ["05", "Modernization", C.amber],
+    ["06", "QA and testing", C.mint],
+    ["07", "Copilot app", C.violet],
+    ["08", "Models and context", C.sky],
+    ["09", "Cloud Agent", C.coral],
+    ["10", "Hands-on lab", C.amber],
+  ];
+  modules.forEach((module, index) => {
+    const col = index < 5 ? 0 : 1;
+    const row = index % 5;
+    const x = col === 0 ? 0.45 : 5.15;
+    const y = 1.18 + row * 0.76;
+    slide.addShape("roundRect", { x, y, w: 4.35, h: 0.6, rectRadius: 0.06, fill: { color: C.white }, line: { color: C.border } });
+    slide.addShape("roundRect", { x: x + 0.1, y: y + 0.1, w: 0.56, h: 0.4, rectRadius: 0.05, fill: { color: module[2] }, line: { color: module[2] } });
+    slide.addText(module[0], { x: x + 0.1, y: y + 0.1, w: 0.56, h: 0.4, fontFace: "Aptos", fontSize: 11, bold: true, color: C.white, align: "center", valign: "mid", margin: 0 });
+    slide.addText(module[1], { x: x + 0.82, y: y + 0.13, w: 3.2, h: 0.34, fontFace: "Aptos Display", fontSize: 14, bold: true, color: C.text, margin: 0 });
+  });
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// MODULE 01 ─ CUSTOMIZATION
-// ══════════════════════════════════════════════════════════════════════════════
-sectionSlide(pres, "01", "Customization &\nInstruction Files", "Always-on context · Prompt files · File-scoped rules");
+// 3. Surface decision
+{
+  const slide = contentSlide("00", "Pick the right Copilot surface", "Start with the execution environment, then choose the agent");
+  card(slide, 0.45, 1.18, 2.85, 2.18, "IDE agent", "Local files and terminal.\n\nBest for guided coding, tight edit-review loops, and immediate debugging.", C.mint, C.mintSoft);
+  card(slide, 3.58, 1.18, 2.85, 2.18, "Copilot CLI or app", "Local agent engine with terminal or visual workspace.\n\nBest for longer sessions, subagents, worktrees, and richer orchestration.", C.violet, C.violetSoft);
+  card(slide, 6.7, 1.18, 2.85, 2.18, "Cloud Agent", "GitHub-hosted asynchronous work.\n\nBest for branch-first research, issue-to-PR delivery, and remote steering.", C.coral, C.coralSoft);
+  flow(slide, ["Clarify outcome", "Choose surface", "Set autonomy", "Validate and review"], 1.0, 3.78, 8.0, C.violet);
+}
+
+// Module 01
+sectionSlide("01", "Customization", "Instructions, prompt files, custom agents, skills, hooks, and plugins", C.violet);
 
 {
-    const s = contentSlide(pres, "Module 01 — Always-On Instructions");
-
-    s.addText("Both files are automatically injected into every chat request as persistent context:", {
-        x: 0.3, y: 0.72, w: 9.4, h: 0.3, fontFace: FONT, fontSize: 12, color: C.textMuted,
-    });
-
-    const files = [
-        { path: ".github/copilot-instructions.md", scope: "VS Code · Visual Studio · JetBrains", accent: C.green },
-        { path: "AGENTS.md", scope: "Copilot · Claude Code · any AI agent", accent: C.purple },
-    ];
-    files.forEach((f, i) => {
-        const y = 1.1 + i * 1.05;
-        cardPanel(s, 0.3, y, 9.4, 0.88, f.accent);
-        s.addText(f.path, {
-            x: 0.52, y: y + 0.06, w: 6.5, h: 0.32,
-            fontFace: FONT_MONO, fontSize: 13.5, bold: true, color: C.textPrimary,
-        });
-        s.addText("Scope: " + f.scope, {
-            x: 0.52, y: y + 0.44, w: 9.0, h: 0.3,
-            fontFace: FONT, fontSize: 11, color: C.textMuted,
-        });
-    });
-
-    s.addText("What to include:", {
-        x: 0.3, y: 3.25, w: 4.5, h: 0.3, fontFace: FONT, fontSize: 12, bold: true, color: C.green,
-    });
-    addBullets(s, [
-        "Language & runtime (C# 12 / .NET 8)",
-        "Naming conventions (PascalCase, _camelCase)",
-        "Error handling (ArgumentNullException.ThrowIfNull)",
-        "Security rules (no PII logging, IHttpClientFactory)",
-        "Testing framework (xUnit + Moq patterns)",
-    ], { x: 0.3, y: 3.57, w: 4.5, h: 1.6, fontSize: 11.5 });
-
-    s.addText("What to avoid:", {
-        x: 4.95, y: 3.25, w: 4.75, h: 0.3, fontFace: FONT, fontSize: 12, bold: true, color: C.red,
-    });
-    addBullets(s, [
-        { text: "Secrets or tokens (never hard-code!)", color: C.red },
-        { text: "Frequently-changing content", color: C.orange },
-        { text: "Very long documents (keep < 3 000 words)", color: C.orange },
-        { text: "Broad vague rules with no examples", color: C.textMuted },
-    ], { x: 4.95, y: 3.57, w: 4.75, h: 1.6, fontSize: 11.5 });
+  const slide = contentSlide("01", "Customization layers", "Use the narrowest mechanism that fits the job");
+  const rows = [
+    ["Instructions", "Stable behavior and repository facts", ".github/copilot-instructions.md"],
+    ["Prompt files", "Reusable IDE workflow, manually invoked", ".github/prompts/*.prompt.md"],
+    ["Custom agents", "Specialist persona and tool boundary", ".github/agents/*.agent.md"],
+    ["Skills", "Task-specific instructions, scripts, resources", ".github/skills/<name>/SKILL.md"],
+    ["Hooks and plugins", "Deterministic controls and packaged extensions", ".github/hooks and marketplaces"],
+  ];
+  rows.forEach((row, index) => {
+    const y = 1.1 + index * 0.78;
+    slide.addShape("roundRect", { x: 0.45, y, w: 9.1, h: 0.62, rectRadius: 0.06, fill: { color: index % 2 ? "F1EDF7" : C.white }, line: { color: C.border } });
+    slide.addText(row[0], { x: 0.68, y: y + 0.12, w: 1.45, h: 0.3, fontFace: "Aptos Display", fontSize: 13, bold: true, color: index === 3 ? C.mint : C.violet, margin: 0 });
+    slide.addText(row[1], { x: 2.22, y: y + 0.12, w: 3.75, h: 0.3, fontFace: "Aptos", fontSize: 11, color: C.text, margin: 0 });
+    slide.addText(row[2], { x: 6.1, y: y + 0.12, w: 3.15, h: 0.3, fontFace: "Consolas", fontSize: 9.5, color: C.muted, margin: 0 });
+  });
+  addSource(slide, "Customization cheat sheet", "https://docs.github.com/en/copilot/reference/customization-cheat-sheet");
 }
 
 {
-    const s = contentSlide(pres, "Module 01 — File-Based Instructions & Prompt Files");
-
-    s.addText("File-Based Instructions", {
-        x: 0.3, y: 0.73, w: 4.5, h: 0.34, fontFace: FONT, fontSize: 14, bold: true, color: C.blue,
-    });
-    s.addText("Scoped by file glob via applyTo front-matter — loaded only when matching file is active", {
-        x: 0.3, y: 1.05, w: 4.5, h: 0.3, fontFace: FONT, fontSize: 10.5, color: C.textMuted, italic: true,
-    });
-
-    codeBlock(s, [
-        "---",
-        "applyTo: \"**/*.cs\"",
-        "---",
-        "",
-        "# C# Standards",
-        "- Use var only when type is obvious",
-        "- XML docs on all public members",
-        "- Suffix async methods with Async",
-        "- Never .Result or .Wait() on Tasks",
-    ], 0.3, 1.38, 4.5, 2.45, "csharp-standards.instructions.md");
-
-    addBullets(s, [
-        "Lives in .github/instructions/",
-        "Example: csharp-standards.instructions.md",
-        "Example: test-standards.instructions.md",
-        "Supports ${file} and ${selection} variables",
-    ], { x: 0.3, y: 3.88, w: 4.5, h: 1.2, fontSize: 11 });
-
-    cardPanel(s, 5.0, 0.7, 4.75, 4.5, C.purple);
-    s.addText("Prompt Files  (*.prompt.md)", {
-        x: 5.12, y: 0.76, w: 4.5, h: 0.34, fontFace: FONT, fontSize: 14, bold: true, color: C.purple,
-    });
-    s.addText("On-demand reusable workflows — trigger from Chat with /", {
-        x: 5.12, y: 1.08, w: 4.5, h: 0.3, fontFace: FONT, fontSize: 10.5, color: C.textMuted, italic: true,
-    });
-
-    addTable(s,
-        ["Prompt file", "Trigger", "Variable"],
-        [
-            ["code-review", "/", "${selection}"],
-            ["generate-tests", "/", "${selection}"],
-            ["explain-legacy", "/", "${selection}"],
-            ["sql-query", "/", "${input:query}"],
-            ["modernize-dotnet", "/", "${selection}"],
-        ],
-        5.12, 1.42, 4.5, [2.0, 0.9, 1.6]
-    );
-
-    addBullets(s, [
-        "Save to .github/prompts/ for team sharing",
-        "Variables: ${selection} ${file} ${input:label}",
-        "Access via / in Chat panel",
-    ], { x: 5.12, y: 3.62, w: 4.5, h: 1.2, fontSize: 11 });
+  const slide = contentSlide("01", "Live artifacts in this repository", "Everything shown here is active workshop material");
+  card(slide, 0.45, 1.15, 2.85, 1.45, "Repository instructions", "C# and workshop conventions\n\nPath-specific test rules", C.violet);
+  card(slide, 3.58, 1.15, 2.85, 1.45, "Workshop reviewer", "Custom agent checks accuracy, neutrality, links, and evidence", C.coral);
+  card(slide, 6.7, 1.15, 2.85, 1.45, "Presentation QA", "Skill defines text extraction, visual review, and fix-verify loop", C.mint);
+  slide.addText("Design rules", { x: 0.45, y: 3.0, w: 2.2, h: 0.34, fontFace: "Aptos Display", fontSize: 17, bold: true, color: C.text, margin: 0 });
+  bulletList(slide, [
+    "Keep stable rules in instructions, not every prompt",
+    "Prompt files are IDE-oriented and preview",
+    "Use user-invocable and disable-model-invocation for current custom agents",
+    "Inspect skills and plugins before enabling scripts or tools",
+  ], 0.5, 3.45, 8.95, 1.55, C.text, 11.5);
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// MODULE 02 ─ VS CODE AGENT MODES
-// ══════════════════════════════════════════════════════════════════════════════
-sectionSlide(pres, "02", "VS Code Agent Modes", "Ask · Edit · Agent · Background — pick the right mode");
+// Module 02
+sectionSlide("02", "Agent workflows", "Ask, Plan, Agent mode, custom agents, and isolated subagents", C.mint);
 
 {
-    const s = contentSlide(pres, "Module 02 — Choosing the Right Agent Mode");
-
-    s.addText("Four modes with increasing autonomy. Start with Edit, reach for Agent or Background for complex tasks.", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted, italic: true,
-    });
-
-    addTable(s,
-        ["Capability", "Ask", "Edit", "Agent", "Background"],
-        [
-            ["Answer questions", "✅", "✅", "✅", "✅"],
-            ["Edit a single file", "❌", "✅", "✅", "✅"],
-            ["Edit multiple files", "❌", "✅", "✅", "✅"],
-            ["Run terminal commands", "❌", "❌", "✅", "✅"],
-            ["Run tests and iterate", "❌", "❌", "✅", "✅"],
-            ["Works while you're away", "❌", "❌", "❌", "✅"],
-            ["Opens a PR automatically", "❌", "❌", "❌", "✅"],
-            ["Uses MCP tools", "❌", "❌", "✅", "✅"],
-            ["Runs in cloud / CI environment", "❌", "❌", "❌", "✅"],
-        ],
-        0.3, 1.08, 9.4, [3.6, 1.45, 1.45, 1.45, 1.45]
-    );
-
-    s.addText("Default to Agent Mode for autonomous multi-step work. Use Background Agent when you can afford to walk away for 10–30 min.", {
-        x: 0.3, y: 4.82, w: 9.4, h: 0.38,
-        fontFace: FONT, fontSize: 11, color: C.textMuted, italic: true,
-    });
+  const slide = contentSlide("02", "The local agent loop", "Autonomy increases only after the task is clear");
+  flow(slide, ["Outcome and constraints", "Search context", "Plan", "Implement with tools", "Review diff"], 0.55, 1.35, 8.9, C.mint);
+  card(slide, 0.55, 2.55, 2.7, 1.45, "Ask", "Explain, compare, or investigate without changing files.", C.sky, C.skySoft);
+  card(slide, 3.65, 2.55, 2.7, 1.45, "Plan", "Explore the approach, dependencies, and acceptance criteria before implementation.", C.mint, C.mintSoft);
+  card(slide, 6.75, 2.55, 2.7, 1.45, "Agent", "Search, change files, run commands, test, and iterate across the repository.", C.violet, C.violetSoft);
 }
 
 {
-    const s = contentSlide(pres, "Module 02 — Background Agent");
-
-    s.addText("Runs asynchronously in a cloud-sandboxed VM — creates a branch and opens a Draft PR when done", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted,
-    });
-
-    flowDiagram(s, [
-        { label: "1. Write Issue", sub: "Clear AC in GitHub" },
-        { label: "2. Assign", sub: "@copilot or assignee" },
-        { label: "3. Agent works", sub: "Cloud VM" },
-        { label: "4. Draft PR", sub: "Review diff + log" },
-        { label: "5. Iterate", sub: "Comment → re-run" },
-    ], 1.1, C.green);
-
-    s.addText("What the agent does in the cloud:", {
-        x: 0.3, y: 2.05, w: 4.5, h: 0.32, fontFace: FONT, fontSize: 12.5, bold: true, color: C.textPrimary,
-    });
-    addBullets(s, [
-        "Clones repo into sandboxed cloud VM",
-        "Makes code changes across multiple files",
-        "Runs dotnet build / dotnet test to verify",
-        "Commits and opens a Draft PR",
-        "Full session log attached to the PR",
-    ], { x: 0.3, y: 2.4, w: 4.5, h: 2.5 });
-
-    s.addText("Writing a great issue:", {
-        x: 4.95, y: 2.05, w: 4.75, h: 0.32, fontFace: FONT, fontSize: 12.5, bold: true, color: C.textPrimary,
-    });
-    codeBlock(s, [
-        "## Context",
-        "PermitsController has no GET by applicant.",
-        "",
-        "## Acceptance Criteria",
-        "- [ ] GET /api/permits?applicantId={id}",
-        "- [ ] Returns 200 with List<PermitSummaryDto>",
-        "- [ ] Returns 404 if applicant not found",
-        "- [ ] Includes xUnit test",
-    ], 4.95, 2.4, 4.75, 2.55, "GitHub Issue template");
+  const slide = contentSlide("02", "Custom agents and subagents", "Repeatable specialist versus isolated execution");
+  card(slide, 0.55, 1.2, 4.25, 2.18, "Custom agent", "A reusable definition with a role, instructions, model preferences, and tool boundaries.\n\nUse for a recurring testing, review, migration, or documentation role.", C.violet, C.violetSoft);
+  card(slide, 5.2, 1.2, 4.25, 2.18, "Subagent", "A temporary isolated execution with its own context window.\n\nUse for independent research or review that should not crowd the main session.", C.mint, C.mintSoft);
+  slide.addShape("roundRect", { x: 1.35, y: 3.78, w: 7.3, h: 0.62, rectRadius: 0.08, fill: { color: C.coralSoft }, line: { color: C.coral, transparency: 55 } });
+  slide.addText("Do not send several agents to edit the same files. Parallel ownership must be independent.", { x: 1.55, y: 3.94, w: 6.9, h: 0.26, fontFace: "Aptos", fontSize: 11.5, bold: true, color: C.coral, align: "center", margin: 0 });
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// MODULE 03 ─ MCP SERVERS
-// ══════════════════════════════════════════════════════════════════════════════
-sectionSlide(pres, "03", "MCP Servers", "Connect external tools · Azure DevOps · GitHub · Playwright");
+// Module 03
+sectionSlide("03", "MCP servers", "Trusted tools, least privilege, and external context", C.sky);
 
 {
-    const s = contentSlide(pres, "Module 03 — Model Context Protocol (MCP)");
-
-    s.addText("MCP lets Copilot call external tools — databases, APIs, repos, browsers — via a standardised JSON-RPC protocol", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted, italic: true,
-    });
-
-    flowDiagram(s, [
-        { label: "VS Code", sub: "User" },
-        { label: "Copilot Chat", sub: "Agent Mode" },
-        { label: "MCP Host", sub: ".vscode/mcp.json" },
-        { label: "MCP Servers", sub: "Tool registry" },
-        { label: "External APIs", sub: "ADO · Azure · GH" },
-    ], 1.1, C.green);
-
-    const servers = [
-        { name: "Azure DevOps MCP", cmd: "npx -y @microsoft/azure-devops-mcp", auth: "AZURE_DEVOPS_PAT", use: "Query work items, PRs, pipelines from Chat", accent: C.blue },
-        { name: "Azure MCP", cmd: "npx -y @azure/mcp@latest server start", auth: "az login", use: "Manage Azure resources, list subscriptions", accent: C.cobalLight },
-        { name: "GitHub Remote MCP", cmd: "https://api.githubcopilot.com/mcp/", auth: "GITHUB_TOKEN Bearer", use: "Query issues, PRs, repo metadata", accent: C.purple },
-        { name: "Playwright MCP", cmd: "npx @playwright/mcp@latest", auth: "None", use: "Browser automation, locator generation", accent: C.green },
-    ];
-
-    servers.forEach((sv, i) => {
-        const y = 2.1 + i * 0.72;
-        cardPanel(s, 0.3, y, 9.4, 0.6, sv.accent);
-        s.addText(sv.name, {
-            x: 0.52, y: y + 0.04, w: 3.2, h: 0.26, fontFace: FONT, fontSize: 11.5, bold: true, color: C.textPrimary,
-        });
-        s.addText(sv.cmd, {
-            x: 0.52, y: y + 0.3, w: 4.8, h: 0.22, fontFace: FONT_MONO, fontSize: 9, color: C.green,
-        });
-        s.addText("Auth: " + sv.auth, {
-            x: 5.6, y: y + 0.04, w: 3.9, h: 0.24, fontFace: FONT, fontSize: 10, color: C.textMuted,
-        });
-        s.addText(sv.use, {
-            x: 5.6, y: y + 0.3, w: 3.9, h: 0.24, fontFace: FONT, fontSize: 10.5, color: C.textSecond, italic: true,
-        });
-    });
+  const slide = contentSlide("03", "MCP architecture and security", "Tool visibility never replaces authentication or authorization");
+  flow(slide, ["Copilot host", "MCP configuration", "Trusted server", "Tool call", "External system"], 0.55, 1.28, 8.9, C.sky);
+  card(slide, 0.55, 2.5, 4.25, 2.0, "Included servers", "GitHub remote MCP\nPlaywright local MCP\n\nSTDIO for local tools; Streamable HTTP for remote tools.", C.sky, C.skySoft);
+  card(slide, 5.2, 2.5, 4.25, 2.0, "Security checklist", ["Allowlist only needed tools", "Use least-privilege scopes", "Keep secrets outside source", "Review third-party servers", "Constrain browser and network access"], C.coral, C.coralSoft);
+  addSource(slide, "MCP and Copilot", "https://docs.github.com/en/copilot/concepts/context/mcp");
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// MODULE 04 ─ COPILOT CLI  (4 slides)
-// ══════════════════════════════════════════════════════════════════════════════
-sectionSlide(pres, "04", "Copilot CLI", "AI agent in your terminal · interactive · programmatic · /fleet");
-
-// Slide 1 — What is Copilot CLI?
-{
-    const s = contentSlide(pres, "Module 04 — What is GitHub Copilot CLI?");
-
-    s.addText(
-        "A standalone AI agent for your terminal — NOT the old gh copilot extension. " +
-        "Invoked as: copilot",
-        { x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted }
-    );
-
-    // two mode cards
-    const modes = [
-        {
-            title: "Interactive Mode",
-            cmd: "copilot",
-            col: C.green,
-            bullets: [
-                "Conversational AI agent session",
-                "Ask / Execute mode (default)",
-                "Plan mode: Shift+Tab",
-                "  — builds structured plan first",
-                "  — clarifies scope before coding",
-                "Steer mid-task, queue messages",
-                "Escape to reject + give feedback",
-            ],
-        },
-        {
-            title: "Programmatic Mode",
-            cmd: 'copilot -p "..." --allow-tool \'shell(git)\'',
-            col: C.purple,
-            bullets: [
-                "Single prompt → completes → exits",
-                "Pipe from a script: ./task.sh | copilot",
-                "--allow-tool / --deny-tool flags",
-                "--allow-all-tools for automation",
-                "Suitable for CI pipelines & scripts",
-                "ACP (Agent Client Protocol) support",
-            ],
-        },
-    ];
-    modes.forEach((m, i) => {
-        const x = 0.3 + i * 4.9;
-        cardPanel(s, x, 1.08, 4.6, 2.6, m.col);
-        s.addText(m.title, { x: x + 0.12, y: 1.14, w: 4.36, h: 0.3, fontFace: FONT, fontSize: 13, bold: true, color: m.col });
-        s.addText(`→  ${m.cmd}`, { x: x + 0.12, y: 1.46, w: 4.36, h: 0.22, fontFace: FONT, fontSize: 9.5, color: C.textMuted, italic: true });
-        addBullets(s, m.bullets.map(t => ({ text: t, level: t.startsWith("  ") ? 1 : 0 })),
-            { x: x + 0.12, y: 1.7, w: 4.36, h: 1.9 });
-    });
-
-    s.addText("Slash commands (in interactive session):", {
-        x: 0.3, y: 3.78, w: 4.6, h: 0.28, fontFace: FONT, fontSize: 12, bold: true, color: C.textPrimary,
-    });
-    addBullets(s, [
-        { text: "/compact — compress context history", bold: false },
-        { text: "/context — show token usage breakdown", bold: false },
-        { text: "/model   — list models / switch model (default: Claude Sonnet 4.5)", bold: false },
-        { text: "/mcp     — list connected MCP servers", bold: false },
-        { text: "/fleet   — trigger parallel subagent execution", bold: true, color: C.orange },
-    ], { x: 0.3, y: 4.08, w: 4.6, h: 1.15 });
-
-    cardPanel(s, 5.2, 3.78, 4.55, 1.45, C.blue);
-    s.addText("Available on all Copilot plans", {
-        x: 5.32, y: 3.86, w: 4.3, h: 0.28, fontFace: FONT, fontSize: 11.5, bold: true, color: C.blue,
-    });
-    addBullets(s, [
-        { text: "Linux, macOS, Windows (PowerShell / WSL)" },
-        { text: "Requires: gh auth login" },
-        { text: "Install: docs.github.com → Install Copilot CLI" },
-        { text: "Context auto-compacts at 95% token limit" },
-    ], { x: 5.32, y: 4.16, w: 4.3, h: 1.0 });
-}
-
-// Slide 2 — Use Cases
-{
-    const s = contentSlide(pres, "Module 04 — Copilot CLI: What Can It Do?");
-
-    s.addText("Converse with it like a pair programmer — it reads, edits, runs commands, and interacts with GitHub.com on your behalf.", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted,
-    });
-
-    s.addText("Local Project Tasks", {
-        x: 0.3, y: 1.1, w: 4.6, h: 0.28, fontFace: FONT, fontSize: 13, bold: true, color: C.green,
-    });
-    codeBlock(s, [
-        "# Start a session",
-        "copilot",
-        "",
-        "# Then just describe what you want:",
-        "Change the background-color of H1 headings to dark blue",
-        "",
-        "Show me the last 5 changes to CHANGELOG.md",
-        "",
-        "Suggest improvements to PermitService.cs",
-        "",
-        "Commit the changes to this repo",
-        "",
-        'Use create-next-app + Tailwind to build a GitHub Actions',
-        "dashboard for this project, then give me instructions to run it",
-    ], 0.3, 1.42, 4.6, 3.38, "interactive session");
-
-    s.addText("GitHub.com Tasks", {
-        x: 5.1, y: 1.1, w: 4.6, h: 0.28, fontFace: FONT, fontSize: 13, bold: true, color: C.blue,
-    });
-    codeBlock(s, [
-        "# In a copilot session:",
-        "List my open PRs",
-        "",
-        "List all open issues assigned to me in my-org/permits-api",
-        "",
-        "I've been assigned issue #42 at github.com/my-org/",
-        "permits-api/issues/42 — start working on it in a branch",
-        "",
-        "Add a SECURITY.md to this repo and open a pull request",
-        "",
-        "Check changes in PR #99 and report any serious errors",
-        "",
-        "Find good first issues for a new team member in my-org/permits-api",
-        "",
-        "Create a GitHub Actions workflow that runs ESLint on PRs",
-        "and fails the check if errors are found — open a PR",
-    ], 5.1, 1.42, 4.6, 3.38, "");
-
-    s.addText("Plan Mode tip: Press Shift+Tab before complex tasks — Copilot asks clarifying questions and shows you the full plan before writing any code.", {
-        x: 0.3, y: 4.88, w: 9.4, h: 0.32, fontFace: FONT, fontSize: 10.5, color: C.orange, italic: true,
-    });
-}
-
-// Slide 3 — /fleet
-{
-    const s = contentSlide(pres, "Module 04 — /fleet: Parallel Subtask Execution");
-
-    s.addText("/fleet breaks a large task into independent subtasks and runs them in parallel via subagents — each with its own context window.", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted,
-    });
-
-    flowDiagram(s, [
-        { label: "Plan mode", sub: "Shift+Tab" },
-        { label: "Build plan", sub: "clarify + approve" },
-        { label: "/fleet dispatch", sub: "orchestrator runs" },
-        { label: "Parallel agents", sub: "own context each" },
-        { label: "Results merged", sub: "by orchestrator" },
-    ], 1.08, C.orange);
-
-    addTable(s,
-        ["Enterprise Scenario", "Why /fleet helps"],
-        [
-            ["Generate xUnit tests for all 8 service classes", "Each class's tests are independent — all 8 written simultaneously"],
-            ["Add XML doc comments to all public interfaces", "Interfaces are independent — each processed by a separate subagent"],
-            ["Refactor logging to ILogger<T> in every service", "Most service classes don't depend on each other"],
-            ["Create ADRs for 10 design decisions", "Each ADR document is independent and can be drafted in parallel"],
-            ["Update appsettings.json across project folders", "Project folders are independent — updates run in parallel"],
-        ],
-        0.3, 2.0, 9.4, [3.5, 5.9]
-    );
-
-    addTable(s,
-        ["Feature", "Description"],
-        [
-            ["Custom agents in /fleet", "Use @test-writer or @doc-author agents per subtask — specify in prompt"],
-            ["Model per subtask", "Request a specific model for specific subtasks within the same /fleet run"],
-            ["Premium request cost", "Each subagent interaction is billed separately — more requests than single-agent"],
-            ["Best suited for", "Parallelizable, independent tasks — not inherently sequential workflows"],
-        ],
-        0.3, 4.12, 9.4, [2.4, 7.0]
-    );
-}
-
-// Slide 4 — Customization
-{
-    const s = contentSlide(pres, "Module 04 — Copilot CLI: Customization");
-
-    s.addText("Copilot CLI is extensible — connect it to your tools, define conventions, and create specialized agents.", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted,
-    });
-
-    addTable(s,
-        ["Feature", "What it does", "How to use"],
-        [
-            ["Custom instructions", "Tell Copilot your stack, build commands, and conventions — all files combine", "Add instructions file to repo root"],
-            ["MCP servers", "Connect Copilot CLI to Azure DevOps, Azure, GitHub, Playwright, and more", "Configure via /mcp or config file"],
-            ["Custom agents", "Create specialized Copilot variants (e.g. @test-writer, @doc-author) ", "Define agent file, reference with @name"],
-            ["Hooks", "Run shell commands at key points: pre/post agent steps (logging, validation)", "Configure in hooks config"],
-            ["Copilot Memory", "Persistent understanding of repo conventions across sessions", "Auto-enabled — Copilot builds memories"],
-            ["Skills", "Enhance CLI with specialized instructions, scripts, and resources", "Define skill files in repo"],
-        ],
-        0.3, 1.08, 9.4, [2.1, 3.9, 3.4]
-    );
-
-    s.addText("Tool permission model:", {
-        x: 0.3, y: 3.68, w: 4.6, h: 0.28, fontFace: FONT, fontSize: 12, bold: true, color: C.textPrimary,
-    });
-    codeBlock(s, [
-        "# Allow git commands only",
-        "copilot -p \"...\" --allow-tool 'shell(git)'",
-        "",
-        "# Allow file edits only",
-        "copilot -p \"...\" --allow-tool 'write'",
-        "",
-        "# Allow all except rm and git push",
-        "copilot --allow-all-tools \\",
-        "  --deny-tool 'shell(rm)' \\",
-        "  --deny-tool 'shell(git push)'",
-    ], 0.3, 3.98, 4.6, 1.35, "programmatic flags");
-
-    s.addText("Security tips:", {
-        x: 5.1, y: 3.68, w: 4.6, h: 0.28, fontFace: FONT, fontSize: 12, bold: true, color: C.orange,
-    });
-    addBullets(s, [
-        { text: "Launch only from directories you trust", bold: false },
-        { text: "Confirm trust prompt on startup — scope is heuristic", bold: false },
-        { text: "For automation, run in a container/VM", bold: true, color: C.orange },
-        { text: "Never --allow-all-tools near sensitive data", bold: false },
-        { text: "Option 3 (Esc + feedback) steers without stopping", bold: false },
-    ], { x: 5.1, y: 3.98, w: 4.6, h: 1.35 });
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// MODULE 05 ─ APP MODERNIZATION
-// ══════════════════════════════════════════════════════════════════════════════
-sectionSlide(pres, "05", "App Modernization", ".NET Upgrade Assistant · Java 8 → 21 · Copilot-assisted migration");
+// Module 04
+sectionSlide("04", "GitHub Copilot CLI", "Rubber Duck, Chronicle, Fleet, delegation, remote, and voice", C.coral);
 
 {
-    const s = contentSlide(pres, "Module 05 — .NET Upgrade Assistant with Copilot");
-
-    s.addText(".NET Upgrade Assistant VS Code extension analyses legacy code and suggests incremental migration steps", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted,
-    });
-
-    addTable(s,
-        ["Legacy Pattern (.NET Framework)", "Modern Pattern (.NET 8)", "Copilot Prompt"],
-        [
-            ["HttpConfiguration", "WebApplication.CreateBuilder()", "Rewrite as .NET 8 minimal API startup"],
-            ["ApiController base class", "ControllerBase + [ApiController]", "Convert to minimal API endpoint"],
-            ["SqlConnection (sync)", "SqlConnection + async/await", "Refactor to async OpenAsync/ExecuteReaderAsync"],
-            ["Web.config", "appsettings.json + IConfiguration", "Migrate config to .NET 8 options pattern"],
-            ["Global.asax", "Program.cs / Startup.cs", "Rewrite as .NET 8 Program.cs"],
-            ["async void", "async Task", "Fix all async void methods to async Task"],
-        ],
-        0.3, 1.08, 9.4, [3.0, 3.0, 3.4]
-    );
-
-    flowDiagram(s, [
-        { label: "Install UA", sub: "VS Code ext" },
-        { label: "Analyse project", sub: "right-click" },
-        { label: "Review report", sub: "breaking changes" },
-        { label: "Copilot fixes", sub: "Agent Mode" },
-        { label: "dotnet build", sub: "validate" },
-    ], 4.12, C.yellow);
-
-    addBullets(s, [
-        { text: "Never use .Result or .Wait() — async all the way", color: C.red },
-        { text: "Use ArgumentNullException.ThrowIfNull() for guard clauses", color: C.orange },
-        { text: "Run dotnet build after each Copilot suggestion batch", color: C.green },
-    ], { x: 0.3, y: 4.97, w: 9.4, h: 0.65, fontSize: 11 });
+  const slide = contentSlide("04", "A modern terminal agent workflow", "Plan locally, validate, critique, then hand off only when useful");
+  flow(slide, ["/plan", "Guided or Autopilot mode", "/diff and tests", "/rubber-duck", "/delegate or share"], 0.55, 1.3, 8.9, C.coral);
+  stat(slide, "GA", "Copilot CLI", 0.7, 2.65, 1.75, C.violet, C.violetSoft);
+  stat(slide, "GA", "Rubber Duck", 2.65, 2.65, 1.75, C.mint, C.mintSoft);
+  stat(slide, "GA", "Remote control", 4.6, 2.65, 1.75, C.sky, C.skySoft);
+  stat(slide, "GA", "Voice input", 6.55, 2.65, 1.75, C.coral, C.coralSoft);
+  slide.addText("The redesigned terminal interface is GA. Verify the installed build with /version and /changelog.", { x: 1.1, y: 4.18, w: 7.8, h: 0.42, fontFace: "Aptos", fontSize: 12, bold: true, color: C.text, align: "center", margin: 0 });
+  addSource(slide, "CLI command reference", "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference");
 }
 
 {
-    const s = contentSlide(pres, "Module 05 — Java Modernization: 8 → 21");
-
-    s.addText("Java Servlet → Spring Boot 3 · JUnit 4 → JUnit 5 · JDBC → Spring Data JPA", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted,
-    });
-
-    addTable(s,
-        ["Java 8 / Legacy", "Java 21 / Spring Boot 3", "Copilot Prompt"],
-        [
-            ["HttpServlet + doGet/doPost", "@RestController + @GetMapping", "Convert servlet to Spring Boot 3 @RestController"],
-            ["JDBC ResultSet boilerplate", "Spring Data JPA @Repository", "Replace JDBC with Spring Data JPA repository"],
-            ["JUnit 4 + @RunWith", "JUnit 5 + @ExtendWith(Mockito)", "Migrate JUnit 4 tests to JUnit 5"],
-            ["@Autowired on field", "Constructor injection", "Refactor field injection to constructor injection"],
-            ["String concat SQL", "Parameterized PreparedStatement", "Fix SQL injection with PreparedStatement"],
-        ],
-        0.3, 1.08, 9.4, [2.8, 2.8, 3.8]
-    );
-
-    addTable(s,
-        ["", ".NET Upgrade Assistant", "Java Modernization (Copilot Agent)"],
-        [
-            ["Primary tool", "UA VS Code extension", "Copilot Agent Mode"],
-            ["Migration scope", "Binary + source analysis", "Source-level refactoring"],
-            ["Output", "Upgrade report + auto-fix", "New Spring Boot project"],
-        ],
-        0.3, 4.08, 9.4, [2.5, 3.45, 3.45]
-    );
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// MODULE 06 ─ QA & TESTING
-// ══════════════════════════════════════════════════════════════════════════════
-sectionSlide(pres, "06", "QA & Testing", "xUnit · Moq · Playwright · AI-generated test plans");
-
-{
-    const s = contentSlide(pres, "Module 06 — Testing Strategy: Three Layers");
-
-    const layers = [
-        { label: "E2E / UI Tests", sub: "Playwright MCP — browser automation", x: 2.5, w: 5.0, y: 1.15, bg: C.red },
-        { label: "Integration Tests", sub: "Controller + DB + real dependencies", x: 1.4, w: 7.2, y: 2.05, bg: C.orange },
-        { label: "Unit Tests (majority)", sub: "xUnit + Moq — Services · Validators · Mappers", x: 0.35, w: 9.3, y: 2.95, bg: C.green },
-    ];
-    layers.forEach(l => {
-        s.addShape("rect", {
-            x: l.x, y: l.y, w: l.w, h: 0.75,
-            fill: { color: l.bg }, line: { color: l.bg },
-        });
-        s.addText(l.label, {
-            x: l.x + 0.15, y: l.y + 0.04, w: l.w - 0.3, h: 0.32,
-            fontFace: FONT, fontSize: 12.5, bold: true, color: C.white, align: "center",
-        });
-        s.addText(l.sub, {
-            x: l.x + 0.15, y: l.y + 0.37, w: l.w - 0.3, h: 0.3,
-            fontFace: FONT, fontSize: 10, color: C.white, align: "center",
-        });
-    });
-
-    s.addText("Fewest", { x: 8.0, y: 1.28, w: 1.6, h: 0.28, fontFace: FONT, fontSize: 10, color: C.textMuted, align: "right" });
-    s.addText("Some", { x: 8.0, y: 2.18, w: 1.6, h: 0.28, fontFace: FONT, fontSize: 10, color: C.textMuted, align: "right" });
-    s.addText("Most", { x: 8.0, y: 3.08, w: 1.6, h: 0.28, fontFace: FONT, fontSize: 10, color: C.textMuted, align: "right" });
-
-    addBullets(s, [
-        { text: "Unit tests: 80% coverage target for services / repositories", color: C.green },
-        { text: "Integration: minimum one test per controller endpoint (WebApplicationFactory)", color: C.orange },
-        { text: "E2E: cover critical paths — permit submission, search, status check", color: C.red },
-        { text: "Naming: MethodName_StateUnderTest_ExpectedBehavior", color: C.textMuted },
-    ], { x: 0.3, y: 3.85, w: 9.4, h: 1.25, fontSize: 11.5 });
+  const slide = contentSlide("04", "CLI feature map", "Use /help as the live source of truth");
+  const groups = [
+    ["Build", "/plan  /refine  Autopilot  /fleet  /tasks", C.violet, C.violetSoft],
+    ["Review", "/rubber-duck  /review  /security-review  /diff", C.mint, C.mintSoft],
+    ["Research", "/research  /ask  GitHub and web search", C.sky, C.skySoft],
+    ["Extend", "/agent  /skills  /plugin  /mcp  /lsp", C.coral, C.coralSoft],
+    ["History", "/chronicle  /resume  /search  /rewind  /share", C.amber, C.amberSoft],
+    ["Connect", "/delegate  /remote  /app  /voice  /pr", C.violet, C.violetSoft],
+  ];
+  groups.forEach((group, index) => {
+    const col = index % 2;
+    const row = Math.floor(index / 2);
+    card(slide, 0.55 + col * 4.65, 1.12 + row * 1.25, 4.25, 1.02, group[0], group[1], group[2], group[3]);
+  });
 }
 
 {
-    const s = contentSlide(pres, "Module 06 — AI-Generated Test Plans");
-
-    s.addText("Select a class → run /generate-tests → Copilot produces a full table then generates the test file", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted, italic: true,
-    });
-
-    addTable(s,
-        ["#", "Method", "Scenario", "Expected Result", "Type"],
-        [
-            ["1", "Constructor", "Null repository", "ArgumentNullException", "Unit"],
-            ["2", "Constructor", "Null logger", "ArgumentNullException", "Unit"],
-            ["3", "SubmitAsync", "Valid request, no dupe", "Returns new PermitId", "Unit"],
-            ["4", "SubmitAsync", "Null request", "ArgumentNullException", "Unit"],
-            ["5", "SubmitAsync", "Duplicate detected", "DuplicatePermitException", "Unit"],
-            ["6", "SubmitAsync", "Repository throws", "PermitStorageException", "Unit"],
-            ["7", "GetStatusAsync", "Valid ID found", "Returns PermitStatus", "Unit"],
-            ["8", "GetStatusAsync", "Null ID", "ArgumentNullException", "Unit"],
-            ["9", "GetStatusAsync", "Unknown ID", "Returns null", "Unit"],
-            ["10", "CancelAsync", "Valid existing permit", "Repository called once", "Unit"],
-            ["11", "CancelAsync", "Null ID", "ArgumentNullException", "Unit"],
-            ["12", "CancelAsync", "Permit not found", "KeyNotFoundException", "Unit"],
-        ],
-        0.3, 1.08, 9.4, [0.45, 1.65, 2.4, 2.55, 2.35]
-    );
-
-    s.addText("Copilot generates cases you'd skip under pressure: null logger, repository-throws, edge state conditions. Always review the plan before accepting.", {
-        x: 0.3, y: 4.85, w: 9.4, h: 0.3, fontFace: FONT, fontSize: 11, color: C.textMuted, italic: true,
-    });
+  const slide = contentSlide("04", "Rubber Duck, Chronicle, and Fleet", "Three features that change how you work, not just what you type");
+  card(slide, 0.45, 1.16, 2.88, 2.35, "Rubber Duck", "Read-only second opinion using a contrasting model.\n\nChallenge plans, code, tests, and assumptions before you finish.", C.mint, C.mintSoft);
+  card(slide, 3.56, 1.16, 2.88, 2.35, "Chronicle", "Analyze synchronized session history.\n\nGenerate standups, tips, usage insights, instruction improvements, and skill ideas.", C.violet, C.violetSoft);
+  card(slide, 6.67, 1.16, 2.88, 2.35, "Fleet", "Parallel local subagents managed by the CLI orchestrator.\n\nUse only when tasks are genuinely independent.", C.coral, C.coralSoft);
+  slide.addText("Fleet is local orchestration. /delegate sends work to Cloud Agent. They are not the same workflow.", { x: 1.05, y: 3.92, w: 7.9, h: 0.42, fontFace: "Aptos", fontSize: 12, bold: true, color: C.text, align: "center", margin: 0 });
 }
 
 {
-    const s = contentSlide(pres, "Module 06 — Playwright UI Testing with MCP");
-
-    s.addText("Connect Playwright MCP → Copilot navigates the browser, auto-generates reliable locators, writes specs", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted, italic: true,
-    });
-
-    s.addText("Workflow:", {
-        x: 0.3, y: 1.07, w: 4.5, h: 0.29, fontFace: FONT, fontSize: 13, bold: true, color: C.textPrimary,
-    });
-    const wfSteps = [
-        { n: "1", t: "Connect Playwright MCP", c: C.green },
-        { n: "2", t: "Ask Copilot: 'Navigate to form'", c: C.blue },
-        { n: "3", t: "Copilot controls browser", c: C.purple },
-        { n: "4", t: "Ask: 'Write a submit test'", c: C.blue },
-        { n: "5", t: "Spec generated with locators", c: C.green },
-        { n: "6", t: "npx playwright test", c: C.orange },
-    ];
-    wfSteps.forEach((st, i) => {
-        s.addShape("ellipse", { x: 0.3, y: 1.42 + i * 0.44, w: 0.3, h: 0.3, fill: { color: st.c }, line: { color: st.c } });
-        s.addText(st.n, { x: 0.3, y: 1.42 + i * 0.44, w: 0.3, h: 0.3, fontFace: FONT, fontSize: 10, bold: true, color: C.white, align: "center", valign: "middle" });
-        s.addText(st.t, { x: 0.72, y: 1.44 + i * 0.44, w: 4.1, h: 0.3, fontFace: FONT, fontSize: 11, color: C.textSecond });
-    });
-
-    addBullets(s, [
-        "Accessibility: axe-core WCAG 2.1 AA scan built in",
-        "CI: npx playwright test --reporter=html",
-        "Supports chromium, firefox, webkit in parallel",
-    ], { x: 0.3, y: 4.1, w: 4.5, h: 1.1, fontSize: 11 });
-
-    codeBlock(s, [
-        "// Copilot-generated spec (MCP locators)",
-        "test('submit permit form', async ({ page }) => {",
-        "  await page.goto('/');",
-        "  await page",
-        "    .getByLabel('Full Name')",
-        "    .fill('Jane Smith');",
-        "  await page",
-        "    .getByLabel('Email')",
-        "    .fill('jane@example.com');",
-        "  await page",
-        "    .getByLabel('Permit Type')",
-        "    .selectOption('BUILDING');",
-        "  await page",
-        "    .getByRole('button', { name: 'Submit' })",
-        "    .click();",
-        "  await expect(page.getByRole('alert'))",
-        "    .toContainText('submitted successfully');",
-        "});",
-    ], 4.95, 0.85, 4.75, 4.3, "TypeScript (Playwright)");
+  const slide = contentSlide("04", "Current status and version caveats", "Teach the capability and verify the command in the installed build");
+  card(slide, 0.55, 1.18, 4.25, 2.45, "Generally available", ["Copilot CLI", "Redesigned terminal UI", "Rubber Duck", "Voice input", "Remote control"], C.mint, C.mintSoft);
+  card(slide, 5.2, 1.18, 4.25, 2.45, "Preview or experimental", ["Copilot Memory: public preview", "/mcp search: experimental", "/every and /after scheduling: experimental", "App cloud sandboxes: public preview"], C.coral, C.coralSoft);
+  slide.addText("Some builds expose /autopilot or /memory toggles. Official guidance treats Autopilot as a mode and Memory as a capability. Check /help.", { x: 1.0, y: 3.98, w: 8.0, h: 0.48, fontFace: "Aptos", fontSize: 11.5, color: C.muted, align: "center", margin: 0 });
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// MODULE 07 ─ DATABASES
-// ══════════════════════════════════════════════════════════════════════════════
-sectionSlide(pres, "07", "Databases", "mssql extension · OntarioPermits schema · T-SQL patterns");
+// Module 05
+sectionSlide("05", "App modernization", "Inventory, plan, migrate incrementally, and preserve behavior", C.amber);
 
 {
-    const s = contentSlide(pres, "Module 07 — mssql Extension & Copilot SQL Patterns");
-
-    s.addText("Connect to SQL Server / LocalDB from VS Code, then use Copilot Chat to write, explain and fix T-SQL", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted, italic: true,
-    });
-
-    s.addText("OntarioPermits Schema:", {
-        x: 0.3, y: 1.08, w: 2.5, h: 0.28, fontFace: FONT, fontSize: 12.5, bold: true, color: C.cobalLight,
-    });
-    const tables = [
-        { name: "Regions", cols: ["RegionId PK", "Name", "Code"], x: 0.3 },
-        { name: "Applicants", cols: ["ApplicantId PK", "FullName", "Email"], x: 2.65 },
-        { name: "Permits", cols: ["PermitId PK", "Status (CHECK)", "ApplicantId FK", "RegionId FK"], x: 5.0 },
-        { name: "StatusHistory", cols: ["HistoryId PK", "PermitId FK", "ChangedAt", "OldStatus"], x: 7.35 },
-    ];
-    tables.forEach((t) => {
-        cardPanel(s, t.x, 1.42, 2.2, 1.6, C.cobalLight);
-        s.addText(t.name, { x: t.x + 0.12, y: 1.48, w: 1.96, h: 0.28, fontFace: FONT_MONO, fontSize: 11, bold: true, color: C.cobalLight });
-        s.addShape("rect", { x: t.x, y: 1.76, w: 2.2, h: 0.02, fill: { color: C.border }, line: { color: C.border } });
-        t.cols.forEach((col, ci) => {
-            s.addText(col, { x: t.x + 0.12, y: 1.8 + ci * 0.24, w: 2.0, h: 0.22, fontFace: FONT_MONO, fontSize: 8.5, color: ci === 0 ? C.yellow : C.textSecond });
-        });
-    });
-
-    addTable(s,
-        ["Prompt Pattern", "Example"],
-        [
-            ["Natural language → SELECT", "\"Show all PENDING permits older than 30 days sorted by date\""],
-            ["Explain query", "\"Explain what this query does for a non-developer\""],
-            ["Fix SQL injection", "\"Refactor this dynamic SQL to use parameterized queries\""],
-            ["Suggest indexes", "\"Suggest indexes to speed up this query\""],
-            ["Generate stored procedure", "\"Create an SP to transition permit status with audit trail\""],
-        ],
-        0.3, 3.1, 9.4, [2.7, 6.7]
-    );
-
-    codeBlock(s, [
-        "-- Copilot suggestion: overdue pending permits",
-        "SELECT p.PermitId, a.FullName, p.PermitType, p.SubmittedAt",
-        "FROM   Permits p JOIN Applicants a ON p.ApplicantId = a.ApplicantId",
-        "WHERE  p.Status = 'PENDING' AND DATEDIFF(day, p.SubmittedAt, GETDATE()) > 30",
-        "ORDER  BY p.SubmittedAt;",
-    ], 0.3, 4.52, 9.4, 0.72, "T-SQL");
+  const slide = contentSlide("05", "The modernization loop", "Copilot accelerates analysis and implementation; tests protect behavior");
+  flow(slide, ["Inventory", "Characterize behavior", "Plan small steps", "Migrate one concern", "Build and test"], 0.55, 1.3, 8.9, C.amber);
+  card(slide, 0.55, 2.55, 4.25, 1.5, ".NET sample", "Web API 2, Web.config, synchronous repository, direct construction.\n\nTarget a supported .NET release and ASP.NET Core.", C.violet, C.violetSoft);
+  card(slide, 5.2, 2.55, 4.25, 1.5, "Java sample", "Java 8 servlet, manual JSON, tightly coupled request handling.\n\nTarget Java 21 and Spring Boot 3.", C.mint, C.mintSoft);
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// MODULE 08 ─ MODELS & CONTEXT
-// ══════════════════════════════════════════════════════════════════════════════
-sectionSlide(pres, "08", "Models & Context", "23 models · multiplier tiers · context management");
+// Module 06
+sectionSlide("06", "QA and testing", "Test planning, focused generation, Playwright, and accessibility", C.mint);
 
 {
-    const s = contentSlide(pres, "Module 08 — Available Models (March 2026)");
+  const slide = contentSlide("06", "Generate a plan before tests", "Copilot should expose assumptions before it writes assertions");
+  flow(slide, ["Read behavior", "Draft test plan", "Approve cases", "Generate focused tests", "Run and review"], 0.55, 1.28, 8.9, C.mint);
+  card(slide, 0.55, 2.52, 2.75, 1.55, "Unit", "xUnit and Moq sample\n\nBusiness rules, validation, failures", C.violet, C.violetSoft);
+  card(slide, 3.62, 2.52, 2.75, 1.55, "End-to-end", "Playwright sample\n\nStable role and label locators", C.sky, C.skySoft);
+  card(slide, 6.7, 2.52, 2.75, 1.55, "Accessibility", "axe-core plus keyboard checks\n\nAutomated checks need human review", C.coral, C.coralSoft);
+}
 
-    s.addText("23 models across tiers. Premium multiplier controls request cost against your monthly allowance.", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted,
-    });
+// Module 07
+sectionSlide("07", "GitHub Copilot App", "A visual workspace built on Copilot CLI", C.violet);
 
-    addTable(s,
-        ["Multiplier", "Models", "Best For"],
-        [
-            ["0×  (Free)", "GPT-4o · GPT-4.1 · GPT-5 mini · Raptor mini", "Everyday tasks — no quota consumed"],
-            ["0.25–0.33×", "Grok Code Fast · Claude Haiku 4.5 · Gemini 3 Flash · GPT-5.1-Mini", "Fast responses, large-scale summarisation"],
-            ["1×", "Claude Sonnet 4/4.5/4.6 · Gemini 2.5/3.1 Pro · GPT-5.1/5.2/5.3", "Balanced coding + reasoning — daily workhorse"],
-            ["3×", "Claude Opus 4.5 · Claude Opus 4.6", "Deep architecture, complex multi-file reasoning"],
-            ["30× (preview)", "Claude Opus 4.6 fast mode", "Ultra-fast Opus — verify billing before use"],
-        ],
-        0.3, 1.08, 9.4, [1.3, 4.6, 3.5]
-    );
-
-    statCallout(s, "23", "Models Available", 0.3, 3.5, C.green);
-    statCallout(s, "1M", "Max Context (Gemini/GPT4.1)", 2.6, 3.5, C.blue);
-    statCallout(s, "200k", "Claude Context Window", 4.9, 3.5, C.purple);
-    statCallout(s, "0x", "Zero-cost free-tier models", 7.1, 3.5, C.bgCard);
-
-    s.addText("Always verify at: docs.github.com/en/copilot/reference/ai-models/supported-models", {
-        x: 0.3, y: 4.85, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11, color: C.yellow, italic: true,
-    });
+{
+  const slide = contentSlide("07", "The app workspace", "Parallel isolated sessions without losing the CLI agent model");
+  card(slide, 0.45, 1.15, 2.85, 1.35, "Worktrees", "Separate branches and files for parallel tasks", C.violet, C.violetSoft);
+  card(slide, 3.58, 1.15, 2.85, 1.35, "Modes", "Interactive, Plan, and Autopilot sessions", C.mint, C.mintSoft);
+  card(slide, 6.7, 1.15, 2.85, 1.35, "GitHub workflow", "Issues, pull requests, checks, review, and merge", C.coral, C.coralSoft);
+  card(slide, 0.45, 2.78, 2.85, 1.35, "Customization", "Instructions, agents, skills, MCP, plugins", C.sky, C.skySoft);
+  card(slide, 3.58, 2.78, 2.85, 1.35, "Session intelligence", "Quick chats, Chronicle, automations", C.amber, C.amberSoft);
+  card(slide, 6.7, 2.78, 2.85, 1.35, "Rich UI", "Canvas extensions and model/provider selection", C.violet, C.violetSoft);
+  addSource(slide, "Copilot app overview", "https://docs.github.com/en/copilot/concepts/agents/github-copilot-app");
 }
 
 {
-    const s = contentSlide(pres, "Module 08 — Model Selection Guide");
+  const slide = contentSlide("07", "App, CLI, and Cloud Agent", "One ecosystem, different execution environments");
+  card(slide, 0.45, 1.22, 2.88, 2.32, "Copilot CLI", "Terminal-first local work\n\nBest for scripting, shell tools, and direct orchestration", C.coral, C.coralSoft);
+  card(slide, 3.56, 1.22, 2.88, 2.32, "Copilot app", "Visual local workspace\n\nBest for parallel worktrees, sessions, PR review, and canvases", C.violet, C.violetSoft);
+  card(slide, 6.67, 1.22, 2.88, 2.32, "Cloud Agent", "Hosted asynchronous work\n\nBest for branch-first research or issue-to-PR delivery", C.mint, C.mintSoft);
+  slide.addShape("roundRect", { x: 1.2, y: 3.92, w: 7.6, h: 0.52, rectRadius: 0.08, fill: { color: C.amberSoft }, line: { color: C.amber, transparency: 55 } });
+  slide.addText("Cloud sandboxes in the app are public preview. Use local worktrees for the stable workshop path.", { x: 1.35, y: 4.06, w: 7.3, h: 0.22, fontFace: "Aptos", fontSize: 11, bold: true, color: "8A5900", align: "center", margin: 0 });
+}
 
-    addTable(s,
-        ["Task", "Recommended Model", "Why"],
-        [
-            ["Everyday completions / quick Q&A", "GPT-4o / GPT-4.1", "0x cost — use freely without quota"],
-            ["Refactoring a single file", "Claude Haiku 4.5 (0.33x)", "Fast, inexpensive for focused edits"],
-            ["Multi-file feature implementation", "Claude Sonnet 4.6 (1x)", "Strong instruction-following for complex work"],
-            ["Analyse 100k+ token codebase", "Gemini 3.1 Pro (1x)", "1M context — handles entire large repos"],
-            ["Architecture design / ADRs", "Claude Opus 4.6 (3x)", "Deepest reasoning — worth the cost"],
-            ["Test generation", "Claude Sonnet 4.6 (1x)", "Reliable naming + Arrange/Act/Assert structure"],
-            ["SQL query generation", "GPT-4o (0x) or Sonnet", "Both handle T-SQL well; 0x for routine queries"],
-            ["Legacy code explanation", "Claude Sonnet 4.6 (1x)", "Superior contextual narrative explanation"],
-            ["PR summary / documentation", "GPT-5 mini (0x)", "Fast, accurate, free"],
-        ],
-        0.3, 0.83, 9.4, [3.2, 2.7, 3.5]
-    );
+// Module 08
+sectionSlide("08", "Models and context", "Live selection, task fit, and high-signal context", C.sky);
 
-    s.addText("The 30-second rule: if you haven't switched models, GPT-4o is your default. For extended reasoning, switch manually.", {
-        x: 0.3, y: 4.72, w: 9.4, h: 0.5,
-        fontFace: FONT, fontSize: 11, color: C.textMuted, italic: true,
-    });
+{
+  const slide = contentSlide("08", "Choose by task, not a static ranking", "Availability, pricing, and model versions change too quickly for a frozen table");
+  card(slide, 0.45, 1.15, 2.85, 1.32, "Routine edits", "Start with the default or a fast general-purpose model", C.mint, C.mintSoft);
+  card(slide, 3.58, 1.15, 2.85, 1.32, "Complex implementation", "Use a balanced coding and reasoning model", C.violet, C.violetSoft);
+  card(slide, 6.7, 1.15, 2.85, 1.32, "Architecture and review", "Escalate to deeper reasoning and independent critique", C.coral, C.coralSoft);
+  slide.addText("High-signal context", { x: 0.52, y: 2.82, w: 2.6, h: 0.34, fontFace: "Aptos Display", fontSize: 17, bold: true, color: C.text, margin: 0 });
+  bulletList(slide, ["Acceptance criteria", "Relevant files and errors", "Build and test commands", "Stable repository instructions", "Current policy and constraints"], 0.55, 3.18, 4.0, 1.6, C.text, 11);
+  slide.addText("Avoid", { x: 5.05, y: 2.82, w: 1.4, h: 0.34, fontFace: "Aptos Display", fontSize: 17, bold: true, color: C.coral, margin: 0 });
+  bulletList(slide, ["Attaching whole folders just in case", "Old conversation branches", "Static model rankings", "Copied documentation the agent can search"], 5.05, 3.18, 4.35, 1.6, C.text, 11);
+  addSource(slide, "Supported models", "https://docs.github.com/en/copilot/reference/ai-models/supported-models");
+}
+
+// Module 09
+sectionSlide("09", "Cloud Agent", "GitHub-hosted research, planning, implementation, and review", C.coral);
+
+{
+  const slide = contentSlide("09", "Cloud-agent workflow", "The former Copilot coding agent is now Cloud Agent");
+  flow(slide, ["Start session or issue", "Research and plan", "Edit branch", "Run validation", "Review or create PR"], 0.55, 1.25, 8.9, C.coral);
+  card(slide, 0.55, 2.48, 4.25, 1.65, "Branch-first paths", "Agents or Copilot interface sessions can stay on a branch while you steer and review.\n\nChoose Create pull request when ready.", C.violet, C.violetSoft);
+  card(slide, 5.2, 2.48, 4.25, 1.65, "Pull-request paths", "Issue assignment always creates a PR.\n\nExplicit PR requests, @copilot on an existing PR, and CLI delegation also produce PR workflows.", C.mint, C.mintSoft);
+  addSource(slide, "Cloud Agent overview", "https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent");
 }
 
 {
-    const s = contentSlide(pres, "Module 08 — Context Management");
-
-    s.addText("Copilot's context window is finite. What you include determines answer quality.", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted,
-    });
-
-    addTable(s,
-        ["Context Source", "How to Add", "Approx. Tokens"],
-        [
-            ["copilot-instructions.md", "Automatic — always injected", "500–3 000"],
-            ["Active editor file", "Automatic when file is open", "2 000–10 000"],
-            ["#file attachment", "Type # in Chat → select file", "Varies"],
-            ["#codebase", "Copilot indexes workspace", "Semantic chunks"],
-            ["MCP tool results", "Agent mode only, per tool call", "500–2 000"],
-            ["Conversation history", "Accumulates per session", "Can overflow!"],
-        ],
-        0.3, 1.08, 9.4, [2.5, 3.5, 3.4]
-    );
-
-    s.addText("Signs of context overflow:", {
-        x: 0.3, y: 3.27, w: 4.5, h: 0.3, fontFace: FONT, fontSize: 12.5, bold: true, color: C.red,
-    });
-    addBullets(s, [
-        { text: "Copilot forgets earlier parts of conversation", color: C.red },
-        { text: "Starts ignoring copilot-instructions.md conventions", color: C.red },
-        { text: "Generic answers replace project-specific ones", color: C.orange },
-        { text: "Fix: start a new chat + re-attach key files with #", color: C.green },
-    ], { x: 0.3, y: 3.6, w: 4.5, h: 1.5, fontSize: 11.5 });
-
-    s.addText("Best practices:", {
-        x: 4.95, y: 3.27, w: 4.75, h: 0.3, fontFace: FONT, fontSize: 12.5, bold: true, color: C.green,
-    });
-    addBullets(s, [
-        { text: "Keep copilot-instructions.md under 3 000 words", color: C.green },
-        { text: "Use #file to include only relevant files", color: C.green },
-        { text: "Start new sessions for unrelated tasks", color: C.blue },
-        { text: "Prefer smaller focused prompts over one giant message", color: C.blue },
-        { text: "Use /clear to reset chat while keeping instructions", color: C.textMuted },
-    ], { x: 4.95, y: 3.6, w: 4.75, h: 1.5, fontSize: 11.5 });
+  const slide = contentSlide("09", "GitHub.com features to teach now", "Cloud Agent sits inside a broader context and quality ecosystem");
+  card(slide, 0.45, 1.12, 2.85, 1.35, "Custom agents and MCP", "Repository, organization, enterprise, and user agents\n\nAllowlist trusted cloud MCP tools", C.violet, C.violetSoft);
+  card(slide, 3.58, 1.12, 2.85, 1.35, "Copilot Spaces", "GA curated context from repositories, files, issues, PRs, and instructions", C.mint, C.mintSoft);
+  card(slide, 6.7, 1.12, 2.85, 1.35, "Code review", "GA non-blocking review comments with human validation", C.sky, C.skySoft);
+  card(slide, 0.45, 2.78, 4.3, 1.38, "Latest review controls", ["AGENTS.md, REVIEW.md, CLAUDE.md, GEMINI.md", "Head-branch instructions and skills", "Workflow, firewall, and runner configuration"], C.coral, C.coralSoft);
+  card(slide, 5.05, 2.78, 4.5, 1.38, "Still preview", ["Medium review effort", "Send suggestions to Cloud Agent", "Selected skills and MCP in code review"], C.amber, C.amberSoft);
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// MODULE 09 ─ COPILOT ON GITHUB.COM
-// ══════════════════════════════════════════════════════════════════════════════
-sectionSlide(pres, "09", "Copilot on GitHub.com", "Coding agents · AI code review · Copilot Spaces");
+// Module 10
+sectionSlide("10", "Hands-on lab", "Five exercises plus a simple Node.js demonstration app", C.amber);
 
 {
-    const s = contentSlide(pres, "Module 09 — Coding Agents on GitHub.com");
-
-    s.addText("Assign issues to @copilot — it works asynchronously in the cloud and opens a PR when done", {
-        x: 0.3, y: 0.73, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.textMuted, italic: true,
-    });
-
-    s.addText("Three ways to assign a task to the Copilot Coding Agent:", {
-        x: 0.3, y: 1.08, w: 4.5, h: 0.28, fontFace: FONT, fontSize: 12.5, bold: true, color: C.textPrimary,
-    });
-    const methods = [
-        { label: "Set as Assignee", desc: "Set Copilot as assignee on any open issue", accent: C.green },
-        { label: "@copilot mention", desc: "Comment @copilot implement this feature", accent: C.blue },
-        { label: "/ask slash command", desc: "Use /ask copilot in issue body", accent: C.purple },
-    ];
-    methods.forEach((m, i) => {
-        cardPanel(s, 0.3, 1.42 + i * 0.72, 4.5, 0.6, m.accent);
-        s.addText(m.label, { x: 0.52, y: 1.47 + i * 0.72, w: 4.1, h: 0.25, fontFace: FONT, fontSize: 12, bold: true, color: C.textPrimary });
-        s.addText(m.desc, { x: 0.52, y: 1.72 + i * 0.72, w: 4.1, h: 0.22, fontFace: FONT, fontSize: 10.5, color: C.textMuted });
-    });
-
-    addTable(s,
-        ["Agent Can Do", "Agent Cannot Do"],
-        [
-            ["Read all repo files + history", "Access external systems directly"],
-            ["Run tests and fix failures", "Merge PRs (always needs human approval)"],
-            ["Create branches + commit", "Access secrets unless provided"],
-            ["Iterate based on your PR comments", "Make architectural decisions alone"],
-        ],
-        0.3, 3.6, 4.5, [2.25, 2.25]
-    );
-
-    cardPanel(s, 4.95, 0.7, 4.75, 4.5, C.orange);
-    s.addText("Enterprise Governance Notes", { x: 5.07, y: 0.78, w: 4.5, h: 0.3, fontFace: FONT, fontSize: 12.5, bold: true, color: C.orange });
-    addBullets(s, [
-        "Agents can be restricted at org / enterprise level",
-        "All activity logged in the PR session timeline",
-        "Draft PR must be reviewed + approved before merge",
-        "Branch protection rules still apply to agent commits",
-        "Agent cannot access production environments",
-        "Copilot Enterprise required for private repos",
-    ], { x: 5.07, y: 1.12, w: 4.55, h: 2.5, fontSize: 11.5 });
-
-    s.addText("Agent PR review checklist:", { x: 5.07, y: 3.68, w: 4.55, h: 0.3, fontFace: FONT, fontSize: 12, bold: true, color: C.textPrimary });
-    addBullets(s, [
-        "Business logic correctness — human eyes required",
-        "xUnit test coverage present",
-        "No hardcoded secrets in diff",
-        "Follows copilot-instructions.md conventions",
-    ], { x: 5.07, y: 3.98, w: 4.55, h: 1.15, fontSize: 11 });
+  const slide = contentSlide("10", "Lab flow and demo application", "Use synthetic data and disposable branches for write exercises");
+  const lab = [
+    ["01", "Customization", "Instructions, prompt, agent, skill"],
+    ["02", "Cloud Agent", "Issue, hosted session, PR review"],
+    ["03", "MCP", "GitHub read tools and Playwright"],
+    ["04", "Modernization", "Analyze, plan, preserve behavior"],
+    ["05", "Testing", "xUnit, Playwright, accessibility"],
+  ];
+  lab.forEach((item, index) => {
+    const y = 1.05 + index * 0.72;
+    slide.addShape("roundRect", { x: 0.45, y, w: 5.5, h: 0.56, rectRadius: 0.06, fill: { color: C.white }, line: { color: C.border } });
+    slide.addText(item[0], { x: 0.58, y: y + 0.09, w: 0.48, h: 0.34, fontFace: "Aptos", fontSize: 11, bold: true, color: C.violet, align: "center", margin: 0 });
+    slide.addText(item[1], { x: 1.15, y: y + 0.09, w: 1.45, h: 0.34, fontFace: "Aptos Display", fontSize: 12.5, bold: true, color: C.text, margin: 0 });
+    slide.addText(item[2], { x: 2.65, y: y + 0.1, w: 3.05, h: 0.3, fontFace: "Aptos", fontSize: 9.5, color: C.muted, margin: 0 });
+  });
+  card(slide, 6.25, 1.05, 3.3, 3.12, "demo-nodejs", ["Dependency-free task board", "Built-in HTTP server", "Single-page UI", "Node test runner", "No external service setup", "Ideal for local and cloud demos"], C.mint, C.mintSoft);
 }
 
+// 30. Closing
 {
-    const s = contentSlide(pres, "Module 09 — AI Code Review & Copilot Spaces");
-
-    s.addText("AI Code Review", { x: 0.3, y: 0.73, w: 4.5, h: 0.36, fontFace: FONT, fontSize: 14.5, bold: true, color: C.blue });
-    addBullets(s, [
-        { text: "Enable: repo Settings → Code review → AI", bold: true },
-        { text: "Auto-reviews every PR with inline comments" },
-        { text: "Customise with .github/copilot-review-instructions.md" },
-        { text: "Checks: security issues, null refs, missing tests" },
-        { text: "Does NOT merge — gating needs human approval" },
-    ], { x: 0.3, y: 1.12, w: 4.5, h: 2.0, fontSize: 12 });
-
-    codeBlock(s, [
-        "# Security",
-        "Flag ALL SQL string concatenation as high severity.",
-        "# Enterprise Standards",
-        "Require XML doc on all public members.",
-        "# .NET 8",
-        "Flag any .Result or .Wait() on Tasks.",
-        "# Testing",
-        "Flag classes without a corresponding test file.",
-    ], 0.3, 3.2, 4.5, 1.95, "copilot-review-instructions.md");
-
-    cardPanel(s, 4.95, 0.7, 4.75, 4.5, C.purple);
-    s.addText("Copilot Spaces", { x: 5.07, y: 0.78, w: 4.5, h: 0.36, fontFace: FONT, fontSize: 14.5, bold: true, color: C.purple });
-    s.addText("Persistent, curated knowledge context shared across a team", {
-        x: 5.07, y: 1.14, w: 4.5, h: 0.28, fontFace: FONT, fontSize: 11, color: C.textMuted, italic: true,
-    });
-    addBullets(s, [
-        { text: "Create at github.com → Copilot → Spaces", bold: true },
-        { text: "Add: repos, files, URLs, Jira, Confluence" },
-        { text: "Share with team — everyone has same context" },
-        { text: "Access from VS Code via GitHub Remote MCP" },
-    ], { x: 5.07, y: 1.45, w: 4.5, h: 1.6, fontSize: 12 });
-
-    addTable(s,
-        ["Use Case", "Knowledge Source"],
-        [
-            ["Platform architecture Q&A", "ADR docs + design wikis + Confluence"],
-            ["Modernization team onboarding", "Module 05 docs + samples + guides"],
-            ["Enterprise standards reference", "copilot-instructions.md + security policy"],
-        ],
-        5.07, 3.2, 4.55, [2.5, 2.05]
-    );
-
-    logoPlaceholder(s, 5.07, 4.55, 4.55, 0.5, "[ Add GitHub Spaces screenshot / logo ]");
+  const slide = pptx.addSlide();
+  slide.background = { color: C.ink };
+  slide.addShape("rect", { x: 0, y: 0, w: 0.24, h: H, fill: { color: C.mint }, line: { color: C.mint } });
+  slide.addText("Build the habit, not the screenshot", { x: 0.75, y: 0.88, w: 8.6, h: 0.7, fontFace: "Aptos Display", fontSize: 36, bold: true, color: C.white, margin: 0 });
+  slide.addText("Use live help and documentation for version-sensitive details. Keep repository instructions stable, permissions narrow, and human review explicit.", { x: 0.78, y: 1.82, w: 7.35, h: 0.9, fontFace: "Aptos", fontSize: 17, color: C.darkMuted, margin: 0 });
+  const sources = [
+    ["Copilot CLI", "docs.github.com/copilot/how-tos/use-copilot-agents/use-copilot-cli"],
+    ["Copilot app", "docs.github.com/en/copilot/concepts/agents/github-copilot-app"],
+    ["Cloud Agent", "docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent"],
+    ["Feature matrix", "docs.github.com/en/copilot/reference/copilot-feature-matrix"],
+  ];
+  sources.forEach((source, index) => {
+    const y = 3.12 + index * 0.43;
+    slide.addText(source[0], { x: 0.8, y, w: 1.25, h: 0.25, fontFace: "Aptos", fontSize: 10.5, bold: true, color: index % 2 ? C.mint : C.violet, margin: 0 });
+    slide.addText(source[1], { x: 2.08, y, w: 6.9, h: 0.25, fontFace: "Consolas", fontSize: 9.5, color: C.darkMuted, margin: 0 });
+  });
+  slide.addShape("roundRect", { x: 0.8, y: 4.82, w: 8.1, h: 0.38, rectRadius: 0.08, fill: { color: C.plum }, line: { color: "51376A" } });
+  slide.addText("CUSTOMIZE  >  ORCHESTRATE  >  VALIDATE  >  REVIEW", { x: 0.8, y: 4.82, w: 8.1, h: 0.38, fontFace: "Aptos", fontSize: 11, bold: true, color: C.mint, align: "center", valign: "mid", margin: 0 });
+  addOrbit(slide, true);
+  addFooter(slide, true);
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// MODULE 10 ─ HANDS-ON LAB
-// ══════════════════════════════════════════════════════════════════════════════
-sectionSlide(pres, "10", "Hands-On Lab", "5 exercises · 90 minutes · self-contained");
-
-{
-    const s = contentSlide(pres, "Module 10 — Workshop Lab: 5 Exercises");
-
-    addTable(s,
-        ["Exercise", "Time", "Skills Practiced", "Key Outcome"],
-        [
-            ["01 — Customization", "15 min", "copilot-instructions.md, prompt files", "Create + use generate-controller.prompt.md"],
-            ["02 — Background Agent", "20 min", "GitHub issue writing, @copilot assignment", "Agent opens PR for a new API endpoint"],
-            ["03 — GitHub Remote MCP", "15 min", "MCP connection, repo queries from Chat", "Query live issues + PRs without leaving VS Code"],
-            ["04 — App Modernization", "15 min", ".NET Upgrade Assistant, async refactoring", "Migrate HttpConfiguration to .NET 8"],
-            ["05 — AI-Assisted Testing", "15 min", "/generate-tests, xUnit + Moq", "12-case test suite generated + all passing"],
-        ],
-        0.3, 0.83, 9.4, [2.0, 0.9, 3.2, 3.3]
-    );
-
-    s.addText("Lab Progress Tracker:", {
-        x: 0.3, y: 3.9, w: 9.4, h: 0.3, fontFace: FONT, fontSize: 12.5, bold: true, color: C.textPrimary,
-    });
-    ["01", "02", "03", "04", "05"].forEach((n, i) => {
-        const x = 0.55 + i * 1.82;
-        s.addShape("ellipse", { x, y: 4.28, w: 0.48, h: 0.48, fill: { color: C.bgCard }, line: { color: C.border, pt: 1.5 } });
-        s.addText(n, { x, y: 4.28, w: 0.48, h: 0.48, fontFace: FONT, fontSize: 13, bold: true, color: C.textMuted, align: "center", valign: "middle" });
-        if (i < 4) {
-            s.addShape("rect", { x: x + 0.48, y: 4.48, w: 1.32, h: 0.05, fill: { color: C.border }, line: { color: C.border } });
-        }
-    });
-
-    s.addText("Prerequisites:  GitHub account + Copilot licence  ·  VS Code + Copilot extensions  ·  .NET 8 SDK  ·  Node.js 20+  ·  GitHub CLI", {
-        x: 0.3, y: 5.0, w: 9.4, h: 0.28, fontFace: FONT, fontSize: 11, color: C.textMuted,
-    });
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// CLOSING SLIDE
-// ══════════════════════════════════════════════════════════════════════════════
-{
-    const s = pres.addSlide();
-    s.background = { color: C.bgCanvas };
-
-    s.addShape("rect", { x: 0, y: 0, w: 0.3, h: H, fill: { color: C.green }, line: { color: C.green } });
-    s.addShape("rect", { x: 0.3, y: 0, w: 0.05, h: H, fill: { color: C.purple }, line: { color: C.purple } });
-
-    // Logo placeholder (closing)
-    logoPlaceholder(s, 7.7, 0.4, 2.0, 1.0, "[ Add GitHub Copilot logo ]");
-
-    s.addText("Thank You", {
-        x: 0.55, y: 0.85, w: 7.5, h: 1.0,
-        fontFace: FONT, fontSize: 52, bold: true, color: C.textPrimary, align: "left",
-    });
-    s.addText("GitHub Copilot Advanced Workshop", {
-        x: 0.55, y: 1.9, w: 7.5, h: 0.48,
-        fontFace: FONT, fontSize: 19, color: C.green, align: "left",
-    });
-
-    s.addShape("rect", { x: 0.55, y: 2.55, w: 9.0, h: 0.03, fill: { color: C.border }, line: { color: C.border } });
-
-    const links = [
-        { label: "Workshop Repo", value: "github.com/your-org/GitHubCopilot-AdvancedRepo" },
-        { label: "Copilot Docs", value: "docs.github.com/en/copilot" },
-        { label: "Supported Models", value: "docs.github.com/en/copilot/reference/ai-models" },
-        { label: "Copilot CLI", value: "docs.github.com/en/copilot/using-github-copilot/cli" },
-    ];
-    links.forEach((l, i) => {
-        s.addText(l.label + ":", {
-            x: 0.55, y: 2.7 + i * 0.42, w: 2.1, h: 0.36,
-            fontFace: FONT, fontSize: 12.5, color: C.textMuted, bold: true,
-        });
-        s.addText(l.value, {
-            x: 2.7, y: 2.7 + i * 0.42, w: 7.0, h: 0.36,
-            fontFace: FONT_MONO, fontSize: 11.5, color: C.textLink,
-        });
-    });
-
-    s.addShape("rect", { x: 0, y: H - 0.3, w: W, h: 0.3, fill: { color: C.bgCard }, line: { color: C.bgCard } });
-    s.addShape("rect", { x: 0, y: H - 0.3, w: 0.3, h: 0.3, fill: { color: C.green }, line: { color: C.green } });
-    s.addText("March 2026  |  Enterprise Workshop  |  github.com/copilot", {
-        x: 0.45, y: H - 0.3, w: 9.2, h: 0.3,
-        fontFace: FONT, fontSize: 9, color: C.textMuted, align: "left", valign: "middle",
-    });
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// WRITE FILE
-// ─────────────────────────────────────────────────────────────────────────────
-const outPath = "GitHub-Copilot-Advanced-Workshop.pptx";
-pres.writeFile({ fileName: outPath })
-    .then(() => console.log("Presentation written to: " + outPath))
-    .catch((err) => { console.error("Error:", err); process.exit(1); });
+pptx.writeFile({ fileName: OUT })
+  .then(() => console.log(`Created ${OUT}`))
+  .catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
